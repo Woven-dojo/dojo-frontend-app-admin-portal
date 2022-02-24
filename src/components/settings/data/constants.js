@@ -4,6 +4,19 @@ const LMS_TAB = 'lms';
 const ACCESS_TAB_LABEL = 'Configure Access';
 const LMS_TAB_LABEL = 'LMS';
 
+export const HELP_CENTER_LINK = 'https://business-support.edx.org/hc/en-us/categories/360000368453-Integrations';
+export const SUCCESS_LABEL = 'success';
+
+export const BLACKBOARD_TYPE = 'Blackboard';
+export const CANVAS_TYPE = 'Canvas';
+export const CORNERSTONE_TYPE = 'Cornerstone';
+export const DEGREED_TYPE = 'Degreed';
+export const MOODLE_TYPE = 'Moodle';
+export const SAP_TYPE = 'SAP';
+
+export const INVALID_LINK = 'Link must be properly formatted and start with http or https';
+export const INVALID_NAME = 'Display name cannot be over 20 characters';
+
 /**
  * Used as tab values and in router params
  */
