@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Stack } from '@edx/paragon';
@@ -7,20 +7,33 @@ import SubsidyRequestManagementTable, {
   useSubsidyRequests,
   SUPPORTED_SUBSIDY_TYPES,
   PAGE_SIZE,
+  REQUEST_STATUS,
 } from '../SubsidyRequestManagementTable';
+import EnterpriseAccessApiService from '../../data/services/EnterpriseAccessApiService';
+import { ApproveCouponCodeRequestModal, DeclineSubsidyRequestModal } from '../subsidy-request-modals';
+import { fetchCouponOrders } from '../../data/actions/coupons';
+import LoadingMessage from '../LoadingMessage';
 
-const ManageRequestsTab = ({ enterpriseId }) => {
+const ManageRequestsTab = ({ enterpriseId, loading: loadingCoupons, fetchCoupons }) => {
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
+
   const {
     isLoading,
     requests,
     requestsOverview,
     handleFetchRequests,
+    updateRequestStatus,
   } = useSubsidyRequests(enterpriseId, SUPPORTED_SUBSIDY_TYPES.codes);
 
-  /* eslint-disable no-console */
-  const handleApprove = (row) => console.log('approve', row);
-  const handleDecline = (row) => console.log('decline', row);
-  /* eslint-enable no-console */
+  const [selectedRequest, setSelectedRequest] = useState();
+  const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
+  const [isDenyModalOpen, setIsDenyModalOpen] = useState(false);
+
+  if (loadingCoupons) {
+    return <LoadingMessage className="coupons mt-3" />;
+  }
 
   return (
     <Stack gap={2}>
@@ -34,8 +47,14 @@ const ManageRequestsTab = ({ enterpriseId }) => {
         data={requests.requests}
         fetchData={handleFetchRequests}
         requestStatusFilterChoices={requestsOverview}
-        onApprove={handleApprove}
-        onDecline={handleDecline}
+        onApprove={(row) => {
+          setSelectedRequest(row);
+          setIsApproveModalOpen(true);
+        }}
+        onDecline={(row) => {
+          setSelectedRequest(row);
+          setIsDenyModalOpen(true);
+        }}
         isLoading={isLoading}
         initialTableOptions={{
           getRowId: row => row.uuid,
@@ -45,16 +64,52 @@ const ManageRequestsTab = ({ enterpriseId }) => {
           pageIndex: 0,
         }}
       />
+      {selectedRequest && (
+        <>
+          {isApproveModalOpen && (
+            <ApproveCouponCodeRequestModal
+              isOpen
+              couponCodeRequest={selectedRequest}
+              onSuccess={() => {
+                updateRequestStatus({ request: selectedRequest, newStatus: REQUEST_STATUS.PENDING });
+                setIsApproveModalOpen(false);
+              }}
+              onClose={() => setIsApproveModalOpen(false)}
+            />
+          )}
+          {isDenyModalOpen && (
+            <DeclineSubsidyRequestModal
+              isOpen
+              subsidyRequest={selectedRequest}
+              declineRequestFn={EnterpriseAccessApiService.declineCouponCodeRequests}
+              onSuccess={() => {
+                updateRequestStatus({ request: selectedRequest, newStatus: REQUEST_STATUS.DECLINED });
+                setIsDenyModalOpen(false);
+              }}
+              onClose={() => setIsDenyModalOpen(false)}
+            />
+          )}
+        </>
+      )}
     </Stack>
   );
 };
 
 ManageRequestsTab.propTypes = {
   enterpriseId: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  fetchCoupons: PropTypes.func.isRequired,
 };
+
+const mapDispatchToProps = dispatch => ({
+  fetchCoupons: (options) => {
+    dispatch(fetchCouponOrders(options));
+  },
+});
 
 const mapStateToProps = state => ({
   enterpriseId: state.portalConfiguration.enterpriseId,
+  loading: state.coupons.loading,
 });
 
-export default connect(mapStateToProps)(ManageRequestsTab);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageRequestsTab);

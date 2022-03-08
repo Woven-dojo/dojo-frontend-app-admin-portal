@@ -117,8 +117,38 @@ export const useSubsidyRequests = (
     [],
   );
 
+  const updateRequestStatus = ({
+    request,
+    newStatus,
+  }) => {
+    setRequests({
+      ...requests,
+      requests: requests.requests.map(req => (
+        req.uuid === request.uuid ? ({ ...req, requestStatus: newStatus }) : req)),
+    });
+
+    setRequestsOverview(
+      requestsOverview.map(overview => {
+        let { number } = overview;
+        if (overview.value === request.requestStatus) {
+          number -= 1;
+        }
+
+        if (overview.value === newStatus) {
+          number += 1;
+        }
+
+        return {
+          ...overview,
+          number,
+        };
+      }),
+    );
+  };
+
   return {
     handleFetchRequests,
+    updateRequestStatus,
     requests,
     requestsOverview,
     isLoading,

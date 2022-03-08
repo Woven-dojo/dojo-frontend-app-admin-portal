@@ -10,6 +10,7 @@ import EnterpriseAccessApiService from '../../../data/services/EnterpriseAccessA
 import * as hooks from '../data/hooks';
 
 const TEST_ENTERPRISE_UUID = 'test-enterprise-uuid';
+const TEST_REQUEST_UUID = 'test-coupon-code-request-uuid';
 const TEST_COURSE_RUN_ID = 'edx+101';
 const TEST_COUPON_ID = 1;
 const TEST_COUPON_ID_2 = 2;
@@ -17,15 +18,15 @@ const TEST_COUPON_ID_2 = 2;
 jest.mock('../data/hooks');
 
 jest.mock('../../../data/services/EnterpriseAccessApiService', () => ({
-  approveCouponCodeRequest: jest.fn(),
+  approveCouponCodeRequests: jest.fn(),
 }));
 
 describe('<ApproveCouponCodeRequestModal />', () => {
   const basicProps = {
-    enterpriseId: TEST_ENTERPRISE_UUID,
     couponCodeRequest: {
-      uuid: 'test-coupon-code-request-uuid',
+      uuid: TEST_REQUEST_UUID,
       courseId: TEST_COURSE_RUN_ID,
+      enterpriseCustomerUUID: TEST_ENTERPRISE_UUID,
     },
     coupons: {
       results: [
@@ -118,9 +119,10 @@ describe('<ApproveCouponCodeRequestModal />', () => {
     const approveBtn = getByTestId('approve-coupon-code-request-modal-approve-btn');
     expect(approveBtn.disabled).toBe(false);
 
-    await act(async () => { fireEvent.click(approveBtn); });
+    await act(async () => fireEvent.click(approveBtn));
 
-    expect(EnterpriseAccessApiService.approveCouponCodeRequest).toHaveBeenCalledWith({
+    expect(EnterpriseAccessApiService.approveCouponCodeRequests).toHaveBeenCalledWith({
+      enterpriseId: TEST_ENTERPRISE_UUID,
       couponCodeRequestUUIDs: [basicProps.couponCodeRequest.uuid],
       couponId: String(TEST_COUPON_ID),
     });
@@ -128,7 +130,7 @@ describe('<ApproveCouponCodeRequestModal />', () => {
   });
 
   it('should render alert if an error occured', async () => {
-    EnterpriseAccessApiService.approveCouponCodeRequest.mockRejectedValue(new Error('something went wrong'));
+    EnterpriseAccessApiService.approveCouponCodeRequests.mockRejectedValue(new Error('something went wrong'));
 
     const { getByTestId } = render(
       <ApproveCouponCodeRequestModal {...basicProps} />,
@@ -140,9 +142,10 @@ describe('<ApproveCouponCodeRequestModal />', () => {
     let approveBtn = getByTestId('approve-coupon-code-request-modal-approve-btn');
     expect(approveBtn.disabled).toBe(false);
 
-    await act(async () => { fireEvent.click(approveBtn); });
+    await act(async () => fireEvent.click(approveBtn));
 
-    expect(EnterpriseAccessApiService.approveCouponCodeRequest).toHaveBeenCalledWith({
+    expect(EnterpriseAccessApiService.approveCouponCodeRequests).toHaveBeenCalledWith({
+      enterpriseId: TEST_ENTERPRISE_UUID,
       couponCodeRequestUUIDs: [basicProps.couponCodeRequest.uuid],
       couponId: String(TEST_COUPON_ID),
     });

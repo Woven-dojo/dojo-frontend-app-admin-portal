@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Stack } from '@edx/paragon';
 import { connect } from 'react-redux';
@@ -7,7 +7,10 @@ import SubsidyRequestManagementTable, {
   useSubsidyRequests,
   SUPPORTED_SUBSIDY_TYPES,
   PAGE_SIZE,
+  REQUEST_STATUS,
 } from '../SubsidyRequestManagementTable';
+import { ApproveLicenseRequestModal, DeclineSubsidyRequestModal } from '../subsidy-request-modals';
+import EnterpriseAccessApiService from '../../data/services/EnterpriseAccessApiService';
 
 const SubscriptionSubsidyRequests = ({ enterpriseId }) => {
   const {
@@ -15,12 +18,12 @@ const SubscriptionSubsidyRequests = ({ enterpriseId }) => {
     requests,
     requestsOverview,
     handleFetchRequests,
+    updateRequestStatus,
   } = useSubsidyRequests(enterpriseId, SUPPORTED_SUBSIDY_TYPES.licenses);
 
-  /* eslint-disable no-console */
-  const handleApprove = (row) => console.log('approve', row);
-  const handleDecline = (row) => console.log('decline', row);
-  /* eslint-enable no-console */
+  const [selectedRequest, setSelectedRequest] = useState();
+  const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
+  const [isDenyModalOpen, setIsDenyModalOpen] = useState(false);
 
   return (
     <Stack gap={2}>
@@ -34,8 +37,14 @@ const SubscriptionSubsidyRequests = ({ enterpriseId }) => {
         data={requests.requests}
         fetchData={handleFetchRequests}
         requestStatusFilterChoices={requestsOverview}
-        onApprove={handleApprove}
-        onDecline={handleDecline}
+        onApprove={(row) => {
+          setSelectedRequest(row);
+          setIsApproveModalOpen(true);
+        }}
+        onDecline={(row) => {
+          setSelectedRequest(row);
+          setIsDenyModalOpen(true);
+        }}
         isLoading={isLoading}
         initialTableOptions={{
           getRowId: row => row.uuid,
@@ -45,6 +54,33 @@ const SubscriptionSubsidyRequests = ({ enterpriseId }) => {
           pageIndex: 0,
         }}
       />
+      {selectedRequest && (
+        <>
+          {isApproveModalOpen && (
+            <ApproveLicenseRequestModal
+              isOpen
+              licenseRequest={selectedRequest}
+              onSuccess={() => {
+                updateRequestStatus({ request: selectedRequest, newStatus: REQUEST_STATUS.PENDING });
+                setIsApproveModalOpen(false);
+              }}
+              onClose={() => setIsApproveModalOpen(false)}
+            />
+          )}
+          {isDenyModalOpen && (
+            <DeclineSubsidyRequestModal
+              isOpen
+              subsidyRequest={selectedRequest}
+              declineRequestFn={EnterpriseAccessApiService.declineLicenseRequests}
+              onSuccess={() => {
+                updateRequestStatus({ request: selectedRequest, newStatus: REQUEST_STATUS.DECLINED });
+                setIsDenyModalOpen(false);
+              }}
+              onClose={() => setIsDenyModalOpen(false)}
+            />
+          )}
+        </>
+      )}
     </Stack>
   );
 };
