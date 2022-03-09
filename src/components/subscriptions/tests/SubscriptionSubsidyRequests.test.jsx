@@ -10,7 +10,6 @@ import {
 import configureMockStore from 'redux-mock-store';
 
 import SubscriptionSubsidyRequests from '../SubscriptionSubsidyRequests';
-import { useSubsidyRequests } from '../../SubsidyRequestManagementTable';
 
 jest.mock('../../SubsidyRequestManagementTable', () => ({
   __esModule: true, // this property makes it work

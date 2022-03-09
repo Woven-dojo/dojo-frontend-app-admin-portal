@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Stack } from '@edx/paragon';
 
+import moment from 'moment';
+import { camelCaseObject } from '@edx/frontend-platform';
 import SubsidyRequestManagementTable, {
   useSubsidyRequests,
   SUPPORTED_SUBSIDY_TYPES,
@@ -13,8 +15,11 @@ import EnterpriseAccessApiService from '../../data/services/EnterpriseAccessApiS
 import { ApproveCouponCodeRequestModal, DeclineSubsidyRequestModal } from '../subsidy-request-modals';
 import { fetchCouponOrders } from '../../data/actions/coupons';
 import LoadingMessage from '../LoadingMessage';
+import { NoAvailableCodesBanner } from '../subsidy-request-management-alerts';
 
-const ManageRequestsTab = ({ enterpriseId, loading: loadingCoupons, fetchCoupons }) => {
+const ManageRequestsTab = ({
+  enterpriseId, couponsData, loading: loadingCoupons, fetchCoupons,
+}) => {
   useEffect(() => {
     fetchCoupons();
   }, []);
@@ -35,12 +40,18 @@ const ManageRequestsTab = ({ enterpriseId, loading: loadingCoupons, fetchCoupons
     return <LoadingMessage className="coupons mt-3" />;
   }
 
+  const now = moment();
+  const coupons = couponsData.results;
+  const hasAvailableCodes = coupons.some(coupon => moment(coupon.endDate) > now)
+    || coupons.some(coupon => coupon.numUnassigned > 0);
+
   return (
     <Stack gap={2}>
       <div>
         <h2>Enrollment requests</h2>
         <p>Approve or decline enrollment requests for individual learners below.</p>
       </div>
+      <NoAvailableCodesBanner couponsData={coupons} />
       <SubsidyRequestManagementTable
         pageCount={requests.pageCount}
         itemCount={requests.itemCount}
@@ -63,6 +74,7 @@ const ManageRequestsTab = ({ enterpriseId, loading: loadingCoupons, fetchCoupons
           pageSize: PAGE_SIZE,
           pageIndex: 0,
         }}
+        disableApproveButton={!hasAvailableCodes}
       />
       {selectedRequest && (
         <>
@@ -97,10 +109,12 @@ const ManageRequestsTab = ({ enterpriseId, loading: loadingCoupons, fetchCoupons
 
 ManageRequestsTab.propTypes = {
   enterpriseId: PropTypes.string.isRequired,
+  couponsData: PropTypes.shape({
+    results: PropTypes.array,
+  }).isRequired,
   loading: PropTypes.bool.isRequired,
   fetchCoupons: PropTypes.func.isRequired,
 };
-
 const mapDispatchToProps = dispatch => ({
   fetchCoupons: (options) => {
     dispatch(fetchCouponOrders(options));
@@ -110,6 +124,7 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => ({
   enterpriseId: state.portalConfiguration.enterpriseId,
   loading: state.coupons.loading,
+  couponsData: state.coupons.data ? camelCaseObject(state.coupons.data) : { results: [] },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageRequestsTab);

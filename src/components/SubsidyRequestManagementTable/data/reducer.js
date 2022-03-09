@@ -1,4 +1,5 @@
 import {
+  SET_IS_LOADING_SUBSIDY_REQUESTS,
   SET_SUBSIDY_REQUESTS_DATA,
   SET_SUBSIDY_REQUESTS_OVERVIEW_DATA,
   UPDATE_SUBSIDY_REQUEST_STATUS,
@@ -11,10 +12,13 @@ export const initialSubsidyRequestsState = {
     pageCount: 0,
     itemCount: 0,
   },
+  isLoading: false,
 };
 
 export const subsidyRequestsReducer = (state = initialSubsidyRequestsState, action) => {
   switch (action.type) {
+    case SET_IS_LOADING_SUBSIDY_REQUESTS:
+      return { ...state, isLoading: action.payload.isLoading };
     case SET_SUBSIDY_REQUESTS_DATA:
       return { ...state, requestsData: action.payload.data };
     case SET_SUBSIDY_REQUESTS_OVERVIEW_DATA:
@@ -48,7 +52,6 @@ export const subsidyRequestsReducer = (state = initialSubsidyRequestsState, acti
         ...state,
         overviewData: updatedOverviewData,
         requestsData: updatedRequestsData,
-
       };
     }
     default:

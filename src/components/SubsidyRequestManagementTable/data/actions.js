@@ -1,3 +1,11 @@
+export const SET_IS_LOADING_SUBSIDY_REQUESTS = 'SET IS LOADING SUBSIDY REQUESTS/OVERVIEW';
+export const setIsLoadingSubsidyRequests = isLoading => ({
+  type: SET_IS_LOADING_SUBSIDY_REQUESTS,
+  payload: {
+    isLoading,
+  },
+});
+
 export const SET_SUBSIDY_REQUESTS_DATA = 'SET SUBSIDY REQUESTS DATA';
 export const setSubsidyRequestsData = data => ({
   type: SET_SUBSIDY_REQUESTS_DATA,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Stack } from '@edx/paragon';
 import { connect } from 'react-redux';
@@ -11,6 +11,9 @@ import SubsidyRequestManagementTable, {
 } from '../SubsidyRequestManagementTable';
 import { ApproveLicenseRequestModal, DeclineSubsidyRequestModal } from '../subsidy-request-modals';
 import EnterpriseAccessApiService from '../../data/services/EnterpriseAccessApiService';
+import { NoAvailableLicensesBanner } from '../subsidy-request-management-alerts';
+import { SubscriptionContext } from './SubscriptionData';
+import LoadingMessage from '../LoadingMessage';
 
 const SubscriptionSubsidyRequests = ({ enterpriseId }) => {
   const {
@@ -20,10 +23,20 @@ const SubscriptionSubsidyRequests = ({ enterpriseId }) => {
     handleFetchRequests,
     updateRequestStatus,
   } = useSubsidyRequests(enterpriseId, SUPPORTED_SUBSIDY_TYPES.licenses);
+  const { data: subscriptionsData, loading: isLoadingSubscriptions } = useContext(SubscriptionContext);
 
   const [selectedRequest, setSelectedRequest] = useState();
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
   const [isDenyModalOpen, setIsDenyModalOpen] = useState(false);
+
+  if (isLoadingSubscriptions) {
+    return <LoadingMessage className="subscriptions" />;
+  }
+
+  const subscriptions = subscriptionsData.results;
+
+  const hasAvailableLicenses = subscriptions[0]?.agreementNetDaysUntilExpiration > 0
+    || subscriptions.some(subscription => subscription.licenses.unassigned > 0);
 
   return (
     <Stack gap={2}>
@@ -31,6 +44,7 @@ const SubscriptionSubsidyRequests = ({ enterpriseId }) => {
         <h2>Enrollment requests</h2>
         <p>Approve or decline enrollment requests for individual learners below.</p>
       </div>
+      <NoAvailableLicensesBanner />
       <SubsidyRequestManagementTable
         pageCount={requests.pageCount}
         itemCount={requests.itemCount}
@@ -53,6 +67,7 @@ const SubscriptionSubsidyRequests = ({ enterpriseId }) => {
           pageSize: PAGE_SIZE,
           pageIndex: 0,
         }}
+        disableApproveButton={!hasAvailableLicenses}
       />
       {selectedRequest && (
         <>
