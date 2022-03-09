@@ -7,7 +7,7 @@ import SubsidyRequestManagementTable, {
   useSubsidyRequests,
   SUPPORTED_SUBSIDY_TYPES,
   PAGE_SIZE,
-  REQUEST_STATUS,
+  SUBSIDY_REQUEST_STATUS,
 } from '../SubsidyRequestManagementTable';
 import EnterpriseAccessApiService from '../../data/services/EnterpriseAccessApiService';
 import { ApproveCouponCodeRequestModal, DeclineSubsidyRequestModal } from '../subsidy-request-modals';
@@ -71,7 +71,7 @@ const ManageRequestsTab = ({ enterpriseId, loading: loadingCoupons, fetchCoupons
               isOpen
               couponCodeRequest={selectedRequest}
               onSuccess={() => {
-                updateRequestStatus({ request: selectedRequest, newStatus: REQUEST_STATUS.PENDING });
+                updateRequestStatus({ request: selectedRequest, newStatus: SUBSIDY_REQUEST_STATUS.PENDING });
                 setIsApproveModalOpen(false);
               }}
               onClose={() => setIsApproveModalOpen(false)}
@@ -83,7 +83,7 @@ const ManageRequestsTab = ({ enterpriseId, loading: loadingCoupons, fetchCoupons
               subsidyRequest={selectedRequest}
               declineRequestFn={EnterpriseAccessApiService.declineCouponCodeRequests}
               onSuccess={() => {
-                updateRequestStatus({ request: selectedRequest, newStatus: REQUEST_STATUS.DECLINED });
+                updateRequestStatus({ request: selectedRequest, newStatus: SUBSIDY_REQUEST_STATUS.DECLINED });
                 setIsDenyModalOpen(false);
               }}
               onClose={() => setIsDenyModalOpen(false)}

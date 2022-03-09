@@ -20,7 +20,7 @@ export const SUBSIDY_REQUESTS_TYPES = {
   },
 };
 
-export const REQUEST_STATUS = {
+export const SUBSIDY_REQUEST_STATUS = {
   REQUESTED: 'requested',
   PENDING: 'pending',
   APPROVED: 'approved',

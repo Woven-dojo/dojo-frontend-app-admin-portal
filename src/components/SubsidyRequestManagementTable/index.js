@@ -12,7 +12,7 @@ export {
 export {
   SUPPORTED_SUBSIDY_TYPES,
   PAGE_SIZE,
-  REQUEST_STATUS,
+  SUBSIDY_REQUEST_STATUS,
 } from './data/constants';
 
 export default SubsidyRequestManagementTable;

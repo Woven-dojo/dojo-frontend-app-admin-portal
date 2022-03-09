@@ -1,4 +1,6 @@
-import { useCallback, useState, useEffect } from 'react';
+import {
+  useCallback, useState, useEffect, useReducer,
+} from 'react';
 import { camelCaseObject } from '@edx/frontend-platform/utils';
 import { logError } from '@edx/frontend-platform/logging';
 import debounce from 'lodash.debounce';
@@ -11,6 +13,8 @@ import {
 } from './constants';
 import { transformRequestOverview, transformRequests } from './utils';
 import DiscoveryApiService from '../../../data/services/DiscoveryApiService';
+import { initialSubsidyRequestsState, subsidyRequestsReducer } from './reducer';
+import { setSubsidyRequestsData, setSubsidyRequestsOverviewData, updateSubsidyRequestStatus } from './actions';
 
 export const useSubsidyRequests = (
   enterpriseId,
@@ -19,12 +23,7 @@ export const useSubsidyRequests = (
   if (!Object.values(SUPPORTED_SUBSIDY_TYPES).includes(subsidyRequestType)) {
     logError(`useSubsidyRequests does not support a subsidy request type of ${subsidyRequestType}.`);
   }
-  const [requests, setRequests] = useState({
-    requests: [],
-    pageCount: 0,
-    itemCount: 0,
-  });
-  const [requestsOverview, setRequestsOverview] = useState([]);
+  const [subsidyRequestsState, dispatch] = useReducer(subsidyRequestsReducer, initialSubsidyRequestsState);
   const [isLoadingRequests, setIsLoadingRequests] = useState(false);
   const [isLoadingRequestsOverview, setIsLoadingRequestsOverview] = useState(false);
 
@@ -46,7 +45,7 @@ export const useSubsidyRequests = (
       );
       const data = camelCaseObject(response.data);
       const result = transformRequestOverview(data);
-      setRequestsOverview(result);
+      dispatch(setSubsidyRequestsOverviewData(result));
     } catch (err) {
       logError(err);
     } finally {
@@ -74,11 +73,11 @@ export const useSubsidyRequests = (
       );
       const data = camelCaseObject(response.data);
       const transformedRequests = transformRequests(data.results);
-      setRequests({
+      dispatch(setSubsidyRequestsData({
         requests: transformedRequests,
         pageCount: data.numPages,
         itemCount: data.count,
-      });
+      }));
     } catch (err) {
       logError(err);
     } finally {
@@ -120,37 +119,16 @@ export const useSubsidyRequests = (
   const updateRequestStatus = ({
     request,
     newStatus,
-  }) => {
-    setRequests({
-      ...requests,
-      requests: requests.requests.map(req => (
-        req.uuid === request.uuid ? ({ ...req, requestStatus: newStatus }) : req)),
-    });
-
-    setRequestsOverview(
-      requestsOverview.map(overview => {
-        let { number } = overview;
-        if (overview.value === request.requestStatus) {
-          number -= 1;
-        }
-
-        if (overview.value === newStatus) {
-          number += 1;
-        }
-
-        return {
-          ...overview,
-          number,
-        };
-      }),
-    );
-  };
+  }) => dispatch(updateSubsidyRequestStatus({
+    request,
+    newStatus,
+  }));
 
   return {
     handleFetchRequests,
     updateRequestStatus,
-    requests,
-    requestsOverview,
+    requests: subsidyRequestsState.requestsData,
+    requestsOverview: subsidyRequestsState.overviewData,
     isLoading,
   };
 };

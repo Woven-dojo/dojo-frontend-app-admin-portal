@@ -7,7 +7,7 @@ import SubsidyRequestManagementTable, {
   useSubsidyRequests,
   SUPPORTED_SUBSIDY_TYPES,
   PAGE_SIZE,
-  REQUEST_STATUS,
+  SUBSIDY_REQUEST_STATUS,
 } from '../SubsidyRequestManagementTable';
 import { ApproveLicenseRequestModal, DeclineSubsidyRequestModal } from '../subsidy-request-modals';
 import EnterpriseAccessApiService from '../../data/services/EnterpriseAccessApiService';
@@ -61,7 +61,7 @@ const SubscriptionSubsidyRequests = ({ enterpriseId }) => {
               isOpen
               licenseRequest={selectedRequest}
               onSuccess={() => {
-                updateRequestStatus({ request: selectedRequest, newStatus: REQUEST_STATUS.PENDING });
+                updateRequestStatus({ request: selectedRequest, newStatus: SUBSIDY_REQUEST_STATUS.PENDING });
                 setIsApproveModalOpen(false);
               }}
               onClose={() => setIsApproveModalOpen(false)}
@@ -73,7 +73,7 @@ const SubscriptionSubsidyRequests = ({ enterpriseId }) => {
               subsidyRequest={selectedRequest}
               declineRequestFn={EnterpriseAccessApiService.declineLicenseRequests}
               onSuccess={() => {
-                updateRequestStatus({ request: selectedRequest, newStatus: REQUEST_STATUS.DECLINED });
+                updateRequestStatus({ request: selectedRequest, newStatus: SUBSIDY_REQUEST_STATUS.DECLINED });
                 setIsDenyModalOpen(false);
               }}
               onClose={() => setIsDenyModalOpen(false)}
