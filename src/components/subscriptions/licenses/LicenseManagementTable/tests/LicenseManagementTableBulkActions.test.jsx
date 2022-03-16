@@ -35,10 +35,10 @@ jest.mock('@edx/frontend-enterprise-utils', () => {
 });
 
 /**
- * Instead of fighting to get the instantsearch mock, we simply mock out the AddcoursesStep
+ * Instead of fighting to get the instantsearch mock, we simply mock out the AddProgramsStep
  * component for this test, and ensure it gets rendered.
  */
-jest.mock('../../../../BulkEnrollmentPage/stepper/AddCoursesStep', () => ({
+jest.mock('../../../../BulkEnrollmentPage/stepper/AddProgramsStep', () => ({
   __esModule: true,
   default: () => <div>Add courses step mock</div>,
 }));
@@ -124,9 +124,9 @@ describe('<LicenseManagementTableBulkActions />', () => {
       userEvent.click(enrollButton);
       const enrollButtonInDialog = await screen.findByTestId('ENROLL_BTN_IN_WARNING_MODAL');
       userEvent.click(enrollButtonInDialog);
-      // Note we mocked out the AddCoursesStep comonent above, so we expect whatever it renders, to be here.
+      // Note we mocked out the AddProgramsStep comonent above, so we expect whatever it renders, to be here.
       // this is sufficient for now to test that bulk enrollment dialog opens up
-      const addCoursesTitle = await screen.findByText('Add courses step mock');
+      const addCoursesTitle = await screen.findByText('Add programs step mock');
       expect(addCoursesTitle).toBeVisible();
     });
   });

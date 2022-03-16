@@ -24,11 +24,11 @@ import {
   SUPPORT_EMAIL_SUBJECT,
   SUPPORT_EMAIL_BODY,
 } from './constants';
-import LicenseManagerApiService from '../../../data/services/LicenseManagerAPIService';
 import { BulkEnrollContext } from '../BulkEnrollmentContext';
 import { ToastsContext } from '../../Toasts';
 import { clearSelectionAction } from '../data/actions';
 import { configuration } from '../../../config';
+import LmsApiService from '../../../data/services/LmsApiService';
 
 export const BulkEnrollmentAlertModal = ({
   isOpen, toggleClose, enterpriseSlug, error, enterpriseId,
@@ -78,7 +78,7 @@ export const generateSuccessMessage = numEmails => {
 };
 
 const BulkEnrollmentSubmit = ({
-  enterpriseId, enterpriseSlug, subscription, onEnrollComplete,
+  enterpriseId, enterpriseSlug, onEnrollComplete,
 }) => {
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(true);
@@ -87,31 +87,30 @@ const BulkEnrollmentSubmit = ({
 
   const {
     emails: [selectedEmails, emailsDispatch],
-    courses: [selectedCourses, coursesDispatch],
+    programs: [selectedPrograms, programsDispatch],
   } = useContext(BulkEnrollContext);
   const { addToast } = useContext(ToastsContext);
 
-  const courseKeys = selectedCourses.map(
-    ({ original, id }) => original?.advertised_course_run?.key || id,
+  const programUuids = selectedPrograms.map(
+    ({ original }) => original?.uuid,
   );
   const emails = selectedEmails.map(({ values }) => values.userEmail);
   const [isErrorModalOpen, toggleErrorModalOpen, toggleErrorModalClose] = useToggle();
-  const hasSelectedCoursesAndEmails = selectedEmails.length > 0 && selectedCourses.length > 0;
+  const hasSelectedCoursesAndEmails = selectedEmails.length > 0 && selectedPrograms.length > 0;
 
   const submitBulkEnrollment = () => {
     setLoading(true);
     const options = {
       emails,
-      course_run_keys: courseKeys,
+      enterprise_uuid: enterpriseId,
+      program_uuids: programUuids,
       notify: checked,
     };
 
-    return LicenseManagerApiService.licenseBulkEnroll(
-      enterpriseId,
-      subscription.uuid,
+    return LmsApiService.bulkProgramEnrollment(
       options,
     ).then(() => {
-      coursesDispatch(clearSelectionAction());
+      programsDispatch(clearSelectionAction());
       emailsDispatch(clearSelectionAction());
       addToast(generateSuccessMessage(selectedEmails.length));
       onEnrollComplete();

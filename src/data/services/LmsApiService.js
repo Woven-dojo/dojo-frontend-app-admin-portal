@@ -26,7 +26,11 @@ class LmsApiService {
 
   static enterpriseCustomerInviteKeyListUrl = `${LmsApiService.baseUrl}/enterprise/api/v1/enterprise-customer-invite-key/basic-list/`;
 
-  static enterpriseCustomerInviteKeyUrl = `${LmsApiService.baseUrl}/enterprise/api/v1/enterprise-customer-invite-key/`
+  static enterpriseCustomerInviteKeyUrl = `${LmsApiService.baseUrl}/enterprise/api/v1/enterprise-customer-invite-key/`;
+
+  static enterpriseProgramBulkEnrollmentUrl = `${LmsApiService.baseUrl}/api/program-enrollment/bulk-enrollment/`;
+
+  static enterpriseCatalogUrl = `${LmsApiService.baseUrl}/api/catalogs/`;
 
   static fetchCourseOutline(courseId) {
     const options = {
@@ -311,6 +315,21 @@ class LmsApiService {
       `${LmsApiService.enterpriseCustomerUrl}${enterpriseUUID}/toggle_universal_link/`,
       formData,
     );
+  }
+
+  static bulkProgramEnrollment(options) {
+    return LmsApiService.apiClient().post(
+      LmsApiService.enterpriseProgramBulkEnrollmentUrl,
+      options,
+    );
+  }
+
+  static fetchCatalogs() {
+    return LmsApiService.apiClient().get(LmsApiService.enterpriseCatalogUrl);
+  }
+
+  static fetchCatalogDetail(enterpriseId) {
+    return LmsApiService.apiClient().get(`${LmsApiService.enterpriseCatalogUrl}${enterpriseId}/`);
   }
 }
 
