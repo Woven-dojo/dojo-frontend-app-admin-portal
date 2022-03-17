@@ -2,12 +2,12 @@ import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import React from 'react';
 
-import { ADD_COURSES_TITLE, WARNING_ALERT_TITLE_TEXT } from './constants';
+import { ADD_PROGRAMS_TITLE, WARNING_ALERT_TITLE_TEXT } from './constants';
 import { BulkEnrollContext } from '../BulkEnrollmentContext';
 import { TABLE_HEADERS } from '../CourseSearchResults';
 
 import '../../../../__mocks__/react-instantsearch-dom';
-import AddCoursesStep from './AddCoursesStep';
+import AddProgramsStep from './AddProgramsStep';
 import { renderWithRouter } from '../../test/testUtils';
 
 const defaultProps = {
@@ -27,15 +27,15 @@ const StepperWrapper = (props) => {
   };
   return (
     <BulkEnrollContext.Provider value={value}>
-      <AddCoursesStep {...props} />
+      <AddProgramsStep {...props} />
     </BulkEnrollContext.Provider>
   );
 };
 
-describe('AddCoursesStep', () => {
+describe('AddProgramsStep', () => {
   it('displays a title', () => {
     renderWithRouter(<StepperWrapper {...defaultProps} />);
-    expect(screen.getByText(ADD_COURSES_TITLE)).toBeInTheDocument();
+    expect(screen.getByText(ADD_PROGRAMS_TITLE)).toBeInTheDocument();
   });
   it('displays a table', () => {
     renderWithRouter(<StepperWrapper {...defaultProps} />);

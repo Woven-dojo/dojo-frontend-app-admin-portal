@@ -13,17 +13,17 @@ const LEARNERS = {
   removal: 'Remove learner',
 };
 
-const COURSES = {
-  singular: 'course',
-  plural: 'courses',
-  title: 'Courses',
-  removal: 'Remove course',
+const PROGRAMS = {
+  singular: 'program',
+  plural: 'programs',
+  title: 'Programs',
+  removal: 'Remove program',
 };
 
 const ReviewStep = ({ returnToLearnerSelection, returnToCourseSelection }) => {
   const {
     emails: [selectedEmails, emailsDispatch],
-    courses: [selectedCourses, coursesDispatch],
+    programs: [selectedPrograms, programsDispatch],
   } = useContext(BulkEnrollContext);
 
   return (
@@ -37,10 +37,10 @@ const ReviewStep = ({ returnToLearnerSelection, returnToCourseSelection }) => {
       <Row>
         <ReviewList
           key="courses"
-          rows={selectedCourses}
+          rows={selectedPrograms}
           accessor="title"
-          dispatch={coursesDispatch}
-          subject={COURSES}
+          dispatch={programsDispatch}
+          subject={PROGRAMS}
           returnToSelection={returnToCourseSelection}
         />
         <ReviewList

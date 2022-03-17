@@ -6,7 +6,7 @@ import {
 } from '@edx/paragon';
 
 import BulkEnrollmentSubmit from './BulkEnrollmentSubmit';
-import AddCoursesStep from './AddCoursesStep';
+import AddProgramsStep from './AddProgramsStep';
 import ReviewStep from './ReviewStep';
 
 import {
@@ -15,8 +15,8 @@ import {
   PREVIOUS_BUTTON_TEXT,
   NEXT_BUTTON_TEST_ID,
   REVIEW_STEP,
-  ADD_COURSES_STEP,
-  ADD_COURSES_TITLE,
+  ADD_PROGRAMS_STEP,
+  ADD_PROGRAMS_TITLE,
   REVIEW_TITLE,
 } from './constants';
 import { BulkEnrollContext } from '../BulkEnrollmentContext';
@@ -37,9 +37,9 @@ import { BulkEnrollContext } from '../BulkEnrollmentContext';
 const BulkEnrollStepper = ({
   enterpriseId, enterpriseSlug, subscription, isOpen, onClose, onSuccess,
 }) => {
-  const steps = [ADD_COURSES_STEP, REVIEW_STEP];
+  const steps = [ADD_PROGRAMS_STEP, REVIEW_STEP];
   const [currentStep, setCurrentStep] = useState(steps[0]);
-  const { courses: [selectedCourses] } = useContext(BulkEnrollContext);
+  const { programs: [selectedPrograms] } = useContext(BulkEnrollContext);
 
   const handleEnrollComplete = () => {
     onClose();
@@ -63,28 +63,28 @@ const BulkEnrollStepper = ({
         </ModalDialog.Header>
 
         <ModalDialog.Body>
-          <Stepper.Step eventKey={ADD_COURSES_STEP} title={ADD_COURSES_TITLE}>
-            <AddCoursesStep
+          <Stepper.Step eventKey={ADD_PROGRAMS_STEP} title={ADD_PROGRAMS_TITLE}>
+            <AddProgramsStep
               enterpriseId={enterpriseId}
               enterpriseSlug={enterpriseSlug}
               subscription={subscription}
-              selectedCoursesNum={selectedCourses.length}
+              selectedCoursesNum={selectedPrograms.length}
             />
           </Stepper.Step>
           <Stepper.Step eventKey={REVIEW_STEP} title={REVIEW_TITLE}>
             <ReviewStep
               returnToLearnerSelection={onClose}
-              returnToCourseSelection={() => setCurrentStep(ADD_COURSES_STEP)}
+              returnToCourseSelection={() => setCurrentStep(ADD_PROGRAMS_STEP)}
             />
           </Stepper.Step>
         </ModalDialog.Body>
 
         <ModalDialog.Footer>
-          <Stepper.ActionRow eventKey={ADD_COURSES_STEP}>
+          <Stepper.ActionRow eventKey={ADD_PROGRAMS_STEP}>
             <Button
               onClick={() => setCurrentStep(REVIEW_STEP)}
               data-testid={NEXT_BUTTON_TEST_ID}
-              disabled={selectedCourses.length < 1}
+              disabled={selectedPrograms.length < 1}
             >
               {NEXT_BUTTON_TEXT}
             </Button>
@@ -92,7 +92,7 @@ const BulkEnrollStepper = ({
           <Stepper.ActionRow eventKey={REVIEW_STEP}>
             <Button
               variant="outline-primary"
-              onClick={() => setCurrentStep(ADD_COURSES_STEP)}
+              onClick={() => setCurrentStep(ADD_PROGRAMS_STEP)}
               data-testid={PREV_BUTTON_TEST_ID}
             >
               {PREVIOUS_BUTTON_TEXT}
