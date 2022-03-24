@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { faFile, faIdCard, faLifeRing } from '@fortawesome/free-regular-svg-icons';
+import { faFile, faIdCard } from '@fortawesome/free-regular-svg-icons';
 import {
-  faCreditCard, faTags, faChartLine, faChartBar, faUniversity, faCog,
+  faCreditCard, faTags, faChartBar, faUniversity, faCog,
 } from '@fortawesome/free-solid-svg-icons';
 
 import IconLink from './IconLink';
 
-import { configuration, features } from '../../config';
+import { features } from '../../config';
 import { ROUTE_NAMES } from '../EnterpriseApp/constants';
 
 class Sidebar extends React.Component {
@@ -50,16 +50,10 @@ class Sidebar extends React.Component {
       enableReportingConfigScreen,
       enableSubscriptionManagementScreen,
       enableSamlConfigurationScreen,
-      enableAnalyticsScreen,
       enableLmsConfigurationsScreen,
     } = this.props;
 
     return [
-      {
-        title: 'Learner Progress Report',
-        to: `${baseUrl}/admin/learners`,
-        icon: faChartLine,
-      },
       {
         title: 'Code Management',
         to: `${baseUrl}/admin/coupons`,
@@ -80,9 +74,9 @@ class Sidebar extends React.Component {
       },
       {
         title: 'Analytics',
-        to: `${baseUrl}/admin/analytics`,
+        to: `${process.env.ANALYTICS_BASE_URL}${baseUrl}`,
         icon: faChartBar,
-        hidden: !features.ANALYTICS || !enableAnalyticsScreen,
+        external: true,
       },
       {
         title: 'SAML Configuration',
@@ -102,13 +96,6 @@ class Sidebar extends React.Component {
         to: `${baseUrl}/admin/${ROUTE_NAMES.settings}/`,
         icon: faCog,
         hidden: !(features.SETTINGS_PAGE && features.SAML_CONFIGURATION && enableLmsConfigurationsScreen),
-      },
-      {
-        title: 'Support',
-        to: configuration.ENTERPRISE_SUPPORT_URL,
-        icon: faLifeRing,
-        hidden: !features.SUPPORT,
-        external: true,
       },
     ];
   }
