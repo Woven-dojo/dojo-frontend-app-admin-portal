@@ -51,7 +51,7 @@ const UserActivationPage = ({ match }) => {
   // to the default page in the Admin Portal.
   if (isActive) {
     addToast('Your edX administrator account was successfully activated.');
-    return <Redirect to={`/${enterpriseSlug}/admin/learners`} />;
+    return <Redirect to={`/${enterpriseSlug}/admin/subscriptions`} />;
   }
 
   // user data is hydrated with an unverified email address, so display a warning message since
