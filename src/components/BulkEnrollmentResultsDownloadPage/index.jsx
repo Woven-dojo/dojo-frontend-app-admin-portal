@@ -42,11 +42,11 @@ const BulkEnrollmentResultsDownloadPage = ({ enterpriseId }) => {
   }
   if (notReady) {
     addToast('Your download is not ready yet.');
-    return <Redirect to={`/${enterpriseSlug}/admin/learners`} />;
+    return <Redirect to={`/${enterpriseSlug}/admin/subscriptions`} />;
   }
   if (error) {
     addToast('There was a problem with your request.');
-    return <Redirect to={`/${enterpriseSlug}/admin/learners`} />;
+    return <Redirect to={`/${enterpriseSlug}/admin/subscriptions`} />;
   }
   global.location.href = redirectUrl;
   return <h1>redirecting...</h1>;
