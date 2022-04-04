@@ -19,7 +19,7 @@ const ERROR_MESSAGE = 'An error occured while retrieving data';
 export const NO_DATA_MESSAGE = 'There are no course results';
 export const ENROLL_TEXT = 'Enroll learners';
 export const TABLE_HEADERS = {
-  courseName: 'Course name',
+  courseName: 'Program name',
   courseAvailability: 'Course availability',
   partnerName: 'Partner',
   enroll: '',
