@@ -9,6 +9,7 @@ import {
 import { ErrorPage } from '@edx/frontend-platform/react';
 
 import App from './components/App';
+import { SentryLoggingService } from './services';
 
 import './index.scss';
 
@@ -31,9 +32,13 @@ initialize({
         MAINTENANCE_ALERT_MESSAGE: process.env.MAINTENANCE_ALERT_MESSAGE || null,
         MAINTENANCE_ALERT_START_TIMESTAMP: process.env.MAINTENANCE_ALERT_START_TIMESTAMP || null,
         ENTERPRISE_LEARNER_PORTAL_URL: process.env.ENTERPRISE_LEARNER_PORTAL_URL || null,
+        SENTRY_DSN: process.env.SENTRY_DSN || null,
+        SENTRY_ENVIRONMENT: process.env.SENTRY_ENVIRONMENT || '',
+        SENTRY_PROJECT_ENV_PREFIX: 'dojo-frontend-app-admin-portal',
       });
     },
   },
+  loggingService: SentryLoggingService,
   messages: [],
   requireAuthenticatedUser: false,
   hydrateAuthenticatedUser: true,
