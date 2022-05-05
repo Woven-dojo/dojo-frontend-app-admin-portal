@@ -2,22 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import {
-  ValidationFormGroup, Input, StatefulButton, Icon, Button,
+  ValidationFormGroup,
+  Input,
+  StatefulButton,
+  Icon,
+  Button,
 } from '@edx/paragon';
 import StatusAlert from '../StatusAlert';
 import SUBMIT_STATES from '../../data/constants/formSubmissions';
 
-export const REQUIRED_DATA_FIELDS = [
-  'entityId',
-  'ssoUrl',
-  'publicKey',
-];
+export const REQUIRED_DATA_FIELDS = ['entityId', 'ssoUrl', 'publicKey'];
 
 class SamlProviderDataForm extends React.Component {
-  state = {
-    invalidFields: {},
-    submitState: SUBMIT_STATES.DEFAULT,
-    error: undefined,
+  constructor(props) {
+    super(props);
+    this.state = {
+      invalidFields: {},
+      submitState: SUBMIT_STATES.DEFAULT,
+      error: undefined,
+    };
   }
 
   /**
@@ -28,10 +31,13 @@ class SamlProviderDataForm extends React.Component {
    */
   validateProviderDataForm = (formData, requiredFields) => {
     const invalidFields = requiredFields
-      .filter(field => !formData.get(field))
-      .reduce((prevFields, currField) => ({ ...prevFields, [currField]: true }), {});
+      .filter((field) => !formData.get(field))
+      .reduce(
+        (prevFields, currField) => ({ ...prevFields, [currField]: true }),
+        {},
+      );
     return invalidFields;
-  }
+  };
 
   /**
    * attempt to submit the form data and show any error states or invalid fields.
@@ -43,7 +49,10 @@ class SamlProviderDataForm extends React.Component {
     requiredFields = [...REQUIRED_DATA_FIELDS];
 
     // validate the form
-    const invalidFields = this.validateProviderDataForm(formData, requiredFields);
+    const invalidFields = this.validateProviderDataForm(
+      formData,
+      requiredFields,
+    );
     if (!isEmpty(invalidFields)) {
       this.setState((state) => ({
         invalidFields: {
@@ -59,22 +68,18 @@ class SamlProviderDataForm extends React.Component {
     if (err) {
       this.setState({ submitState: SUBMIT_STATES.ERROR, error: err });
     }
-  }
+  };
 
   handleDelete = async (providerDataId) => {
     const err = await this.props.deleteProviderData(providerDataId);
     if (err) {
       this.setState({ error: err });
     }
-  }
+  };
 
   render() {
     const { pData, entityId, deleteEnabled } = this.props;
-    const {
-      invalidFields,
-      submitState,
-      error,
-    } = this.state;
+    const { invalidFields, submitState, error } = this.state;
     let errorAlert;
     if (error) {
       errorAlert = (
@@ -105,7 +110,9 @@ class SamlProviderDataForm extends React.Component {
               invalid={invalidFields.entityId}
               invalidMessage="Entity ID is required."
             >
-              <label htmlFor="entityId">Entity ID<span className="required">*</span></label>
+              <label htmlFor="entityId">
+                Entity ID<span className="required">*</span>
+              </label>
               <Input
                 type="text"
                 id="entityId"
@@ -125,7 +132,9 @@ class SamlProviderDataForm extends React.Component {
               invalid={invalidFields.ssoUrl}
               invalidMessage="SSO URL required."
             >
-              <label htmlFor="ssoUrl">SSO URL<span className="required">*</span></label>
+              <label htmlFor="ssoUrl">
+                SSO URL<span className="required">*</span>
+              </label>
               <Input
                 type="text"
                 id="ssoUrl"
@@ -145,7 +154,9 @@ class SamlProviderDataForm extends React.Component {
               invalid={invalidFields.publicKey}
               invalidMessage="Public Key is required."
             >
-              <label htmlFor="publicKey">Public Key<span className="required">*</span></label>
+              <label htmlFor="publicKey">
+                Public Key<span className="required">*</span>
+              </label>
               <Input
                 type="textarea"
                 id="publicKey"
@@ -194,9 +205,7 @@ class SamlProviderDataForm extends React.Component {
           )}
         </div>
         <div className="row">
-          <div className="col col-3 mt-3">
-            {errorAlert}
-          </div>
+          <div className="col col-3 mt-3">{errorAlert}</div>
         </div>
       </form>
     );

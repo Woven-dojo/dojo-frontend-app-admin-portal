@@ -17,28 +17,40 @@ import { configuration } from '../../config';
 import { createSAMLURLs } from './utils';
 
 export class SamlProviderConfigurationCore extends React.Component {
-  state = {
-    providerConfig: undefined,
-    providerData: undefined,
-    error: undefined,
-    loading: true,
-    deleteEnabled: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      providerConfig: undefined,
+      providerData: undefined,
+      error: undefined,
+      loading: true,
+      deleteEnabled: false,
+    };
+  }
 
   componentDidMount() {
     Promise.allSettled([
       LmsApiService.getProviderConfig(this.props.enterpriseId),
       LmsApiService.getProviderData(this.props.enterpriseId),
-    ]).then((responses) => {
-      this.setState({
-        providerConfig: responses[0].status === 'fulfilled' ? responses[0].value.data.results[0] : undefined,
-        providerData: responses[1].status === 'fulfilled' ? responses[1].value.data.results[0] : undefined,
-        loading: false,
-      });
-    })
+    ])
+      .then((responses) => {
+        this.setState({
+          providerConfig:
+            responses[0].status === 'fulfilled'
+              ? responses[0].value.data.results[0]
+              : undefined,
+          providerData:
+            responses[1].status === 'fulfilled'
+              ? responses[1].value.data.results[0]
+              : undefined,
+          loading: false,
+        });
+      })
       .catch((error) => {
         const errorMsg = error.message || error.response.status === 500
-          ? error.message : JSON.stringify(error.response.data);
+          ? error.message
+          : JSON.stringify(error.response.data);
         logError.logAPIErrorResponse(errorMsg);
         this.setState({
           error,
@@ -58,13 +70,15 @@ export class SamlProviderConfigurationCore extends React.Component {
     transformedData.append('slug', this.props.enterpriseSlug);
     transformedData.append('enterprise_customer_uuid', this.props.enterpriseId);
     try {
-      const response = await LmsApiService.postNewProviderConfig(transformedData);
+      const response = await LmsApiService.postNewProviderConfig(
+        transformedData,
+      );
       this.setState({ providerConfig: response.data });
       return undefined;
     } catch (error) {
       return this.handleErrors(error);
     }
-  }
+  };
 
   /**
    * Updates existing provider configuration, then updates this list with the response.
@@ -78,13 +92,16 @@ export class SamlProviderConfigurationCore extends React.Component {
     transformedData.append('slug', this.props.enterpriseSlug);
     transformedData.append('enterprise_customer_uuid', this.props.enterpriseId);
     try {
-      const response = await LmsApiService.updateProviderConfig(transformedData, pid);
+      const response = await LmsApiService.updateProviderConfig(
+        transformedData,
+        pid,
+      );
       this.setState({ providerConfig: response.data });
       return undefined;
     } catch (error) {
       return this.handleErrors(error);
     }
-  }
+  };
 
   /**
    * Permanently deletes a provider configuration, then updates this list with the response.
@@ -99,7 +116,7 @@ export class SamlProviderConfigurationCore extends React.Component {
     } catch (error) {
       return this.handleErrors(error);
     }
-  }
+  };
 
   /**
    * Creates new third party provider data entry in db and refreshes list with the result.
@@ -117,7 +134,7 @@ export class SamlProviderConfigurationCore extends React.Component {
     } catch (error) {
       return this.handleErrors(error);
     }
-  }
+  };
 
   /**
    * Deletes a provider data entry in db and refreshes list with the result.
@@ -132,11 +149,12 @@ export class SamlProviderConfigurationCore extends React.Component {
     } catch (error) {
       return this.handleErrors(error);
     }
-  }
+  };
 
   handleErrors(error) {
     const errorMsg = error.message || error.response?.status === 500
-      ? error.message : JSON.stringify(error.response.data);
+      ? error.message
+      : JSON.stringify(error.response.data);
     logError(errorMsg);
     return errorMsg;
   }
@@ -151,14 +169,15 @@ export class SamlProviderConfigurationCore extends React.Component {
     }
     if (error && error.response?.status !== 404) {
       return (
-        <ErrorPage
-          status={error.response?.status}
-          message={error.message}
-        />
+        <ErrorPage status={error.response?.status} message={error.message} />
       );
     }
 
-    const { id, slug: idpSlug, metadata_source } = providerConfig || { id: '', slug: '', metadata_source: '' };
+    const {
+      id,
+      slug: idpSlug,
+      metadata_source,
+    } = providerConfig || { id: '', slug: '', metadata_source: '' };
 
     const { learnerPortalEnabled, enterpriseSlug } = this.props;
     const { testLink, spMetadataLink } = createSAMLURLs({
@@ -173,23 +192,19 @@ export class SamlProviderConfigurationCore extends React.Component {
         <div>
           <>
             {providerConfig && (
-              <div
-                key={id}
-                className="mb-3"
-              >
+              <div key={id} className="mb-3">
                 <Collapsible
                   styling="card"
                   className="shadow"
                   title={(
                     <div className="row justify-content-around flex-fill">
                       <Icon
-                        className={classNames(
-                          'col-1',
-                          {
-                            'fa fa-check text-success-300': providerConfig.enabled,
-                            'fa fa-times text-danger-300': !providerConfig.enabled,
-                          },
-                        )}
+                        className={classNames('col-1', {
+                          'fa fa-check text-success-300':
+                            providerConfig.enabled,
+                          'fa fa-times text-danger-300':
+                            !providerConfig.enabled,
+                        })}
                       />
                       <div className="col">
                         <h3 className="h6">Entity ID:</h3>
@@ -201,11 +216,27 @@ export class SamlProviderConfigurationCore extends React.Component {
                       </div>
                       <div className="col">
                         <h3 className="h6">SP Metadata</h3>
-                        <p><a target="_blank" rel="noopener noreferrer" href={spMetadataLink}>{spMetadataLink}</a></p>
+                        <p>
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={spMetadataLink}
+                          >
+                            {spMetadataLink}
+                          </a>
+                        </p>
                       </div>
                       <div className="col">
                         <h3 className="h6">Test link</h3>
-                        <p><a target="_blank" rel="noopener noreferrer" href={testLink}>{testLink}</a></p>
+                        <p>
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={testLink}
+                          >
+                            {testLink}
+                          </a>
+                        </p>
                       </div>
                     </div>
                   )}
@@ -221,10 +252,7 @@ export class SamlProviderConfigurationCore extends React.Component {
               </div>
             )}
             {providerData && (
-              <div
-                key={providerData.id}
-                className="mb-3"
-              >
+              <div key={providerData.id} className="mb-3">
                 <Collapsible
                   styling="card"
                   className="shadow"
@@ -250,7 +278,6 @@ export class SamlProviderConfigurationCore extends React.Component {
                     deleteProviderData={this.deleteProviderData}
                     deleteEnabled={deleteEnabled}
                   />
-
                 </Collapsible>
               </div>
             )}
@@ -268,7 +295,7 @@ export class SamlProviderConfigurationCore extends React.Component {
                 </div>
               </Collapsible>
             )}
-            {(providerConfig && !providerData) && (
+            {providerConfig && !providerData && (
               <Collapsible
                 styling="basic"
                 title="Add SAML Provider Data"
@@ -302,7 +329,7 @@ SamlProviderConfigurationCore.propTypes = {
   learnerPortalEnabled: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   learnerPortalEnabled: state.portalConfiguration.enableLearnerPortal,
 });
 

@@ -290,23 +290,23 @@ const LicenseManagementTableBulkActions = ({
         {/* warning modal shows when there is 1 or more revoked licenses selected */}
         {showBulkEnrollWarning
         && (
-        <BulkEnrollWarningModal
-          learners={enrollableLearners}
-          isDialogOpen={showBulkEnrollWarning}
-          onClose={() => setShowBulkEnrollWarning(false)}
-          onEnroll={() => handleBulkEnrollmentForced({ setOfRevokedUsers: revokedUsers })}
-        />
+          <BulkEnrollWarningModal
+            learners={enrollableLearners}
+            isDialogOpen={showBulkEnrollWarning}
+            onClose={() => setShowBulkEnrollWarning(false)}
+            onEnroll={() => handleBulkEnrollmentForced({ setOfRevokedUsers: revokedUsers })}
+          />
         )}
 
         {/* Bulk Enrollment shows in a dialog when enrollment conditions are met */}
         {showBulkEnrollModal && (
-        <BulkEnrollDialog
-          isOpen={showBulkEnrollModal}
-          onClose={() => { setShowBulkEnrollModal(false); }}
-          subscription={subscription}
-          learners={enrollableLearners}
-          onSuccess={onEnrollSuccess}
-        />
+          <BulkEnrollDialog
+            isOpen={showBulkEnrollModal}
+            onClose={() => { setShowBulkEnrollModal(false); }}
+            subscription={subscription}
+            learners={enrollableLearners}
+            onSuccess={onEnrollSuccess}
+          />
         )}
       </ActionRow>
       <LicenseManagementRevokeModal

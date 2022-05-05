@@ -18,12 +18,15 @@ export const REQUIRED_CANVAS_CONFIG_FIELDS = [
 ];
 
 class CanvasIntegrationConfigForm extends React.Component {
-  state = {
-    invalidFields: {},
-    submitState: SUBMIT_STATES.DEFAULT,
-    active: this.props.config?.active,
-    error: undefined,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      invalidFields: {},
+      submitState: SUBMIT_STATES.DEFAULT,
+      active: this.props.config?.active,
+      error: undefined,
+    };
+  }
 
   createCanvasConfig = async (formData) => {
     const transformedData = snakeCaseFormData(formData);

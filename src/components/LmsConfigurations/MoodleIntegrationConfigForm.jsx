@@ -16,11 +16,14 @@ export const REQUIRED_MOODLE_CONFIG_FIELDS = [
 ];
 
 class MoodleIntegrationConfigForm extends React.Component {
-  state = {
-    invalidFields: {},
-    submitState: SUBMIT_STATES.DEFAULT,
-    active: this.props.config?.active,
-    error: null,
+  constructor(props) {
+    super(props);
+    this.state = {
+      invalidFields: {},
+      submitState: SUBMIT_STATES.DEFAULT,
+      active: this.props.config?.active,
+      error: null,
+    };
   }
 
   /**
@@ -38,26 +41,33 @@ class MoodleIntegrationConfigForm extends React.Component {
     } catch (error) {
       return handleErrors(error);
     }
-  }
+  };
 
   updateMoodleConfig = async (formData, configId) => {
     const transformedData = snakeCaseFormData(formData);
     transformedData.append('enterprise_customer', this.props.enterpriseId);
     try {
-      const response = await LmsApiService.updateMoodleConfig(transformedData, configId);
+      const response = await LmsApiService.updateMoodleConfig(
+        transformedData,
+        configId,
+      );
       this.setState({ config: response.data });
       return undefined;
     } catch (error) {
       return handleErrors(error);
     }
-  }
+  };
 
   /**
    * attempt to submit the form data and show any error states or invalid fields.
    * @param {FormData} formData
    */
   handleSubmit = async (formData, config) => {
-    this.setState({ submitState: SUBMIT_STATES.PENDING, error: null, invalidFields: {} });
+    this.setState({
+      submitState: SUBMIT_STATES.PENDING,
+      error: null,
+      invalidFields: {},
+    });
     let requiredFields = [];
     requiredFields = [...REQUIRED_MOODLE_CONFIG_FIELDS];
     if (!formData.get('token')) {
@@ -65,7 +75,10 @@ class MoodleIntegrationConfigForm extends React.Component {
       requiredFields.push('password');
     } else if (!formData.get('username') && !formData.get('password')) {
       requiredFields.push('token');
-    } else if ((formData.get('username') || formData.get('password')) && formData.get('token')) {
+    } else if (
+      (formData.get('username') || formData.get('password'))
+      && formData.get('token')
+    ) {
       requiredFields.push('duplicateCreds');
     }
     // validate the form
@@ -102,14 +115,11 @@ class MoodleIntegrationConfigForm extends React.Component {
         this.setState({ submitState: SUBMIT_STATES.COMPLETE });
       }
     }
-  }
+  };
 
   render() {
     const {
-      invalidFields,
-      submitState,
-      active,
-      error,
+      invalidFields, submitState, active, error,
     } = this.state;
     const { config } = this.props;
     let errorAlert;
@@ -131,15 +141,16 @@ class MoodleIntegrationConfigForm extends React.Component {
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.target);
-          this.handleSubmit(formData, this.state.config ? this.state.config : config);
+          this.handleSubmit(
+            formData,
+            this.state.config ? this.state.config : config,
+          );
         }}
         onChange={() => this.setState({ submitState: SUBMIT_STATES.DEFAULT })}
       >
         <div className="row">
           <div className="col col-6">
-            <ValidationFormGroup
-              for="active"
-            >
+            <ValidationFormGroup for="active">
               <label htmlFor="active">Active</label>
               <Input
                 type="checkbox"
@@ -147,7 +158,7 @@ class MoodleIntegrationConfigForm extends React.Component {
                 name="active"
                 className="ml-3"
                 checked={active}
-                onChange={() => this.setState(prevState => ({ active: !prevState.active }))}
+                onChange={() => this.setState((prevState) => ({ active: !prevState.active }))}
               />
             </ValidationFormGroup>
           </div>
@@ -179,7 +190,9 @@ class MoodleIntegrationConfigForm extends React.Component {
               invalidMessage="Webservice name is required."
               helpText="This should match the webservice's short name in Moodle."
             >
-              <label htmlFor="serviceShortName">Webservice&apos;s Short Name</label>
+              <label htmlFor="serviceShortName">
+                Webservice&apos;s Short Name
+              </label>
               <Input
                 type="text"
                 id="serviceShortName"
@@ -290,9 +303,7 @@ class MoodleIntegrationConfigForm extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col col-3 mt-3">
-            {errorAlert}
-          </div>
+          <div className="col col-3 mt-3">{errorAlert}</div>
         </div>
       </form>
     );

@@ -146,22 +146,22 @@ const LicenseManagementRevokeModal = ({
       <ModalDialog.Body>
         {requestState.error
             && (
-            <Alert variant="danger">
-              <p>There was an error with your request. Please try again.</p>
-              <p>
-                If the error persists,{' '}
-                <Hyperlink destination={configuration.ENTERPRISE_SUPPORT_URL}>
-                  contact customer support.
-                </Hyperlink>
-              </p>
-            </Alert>
+              <Alert variant="danger">
+                <p>There was an error with your request. Please try again.</p>
+                <p>
+                  If the error persists,{' '}
+                  <Hyperlink destination={configuration.ENTERPRISE_SUPPORT_URL}>
+                    contact customer support.
+                  </Hyperlink>
+                </p>
+              </Alert>
             )}
         {showRevocationCapAlert(subscription.isRevocationCapEnabled, subscription.revocations)
             && (
-            <Alert variant="warning">
-              You have already revoked {subscription.revocations.applied} licenses. You
-              have {subscription.revocations.remaining} revocations left on your plan.
-            </Alert>
+              <Alert variant="warning">
+                You have already revoked {subscription.revocations.applied} licenses. You
+                have {subscription.revocations.remaining} revocations left on your plan.
+              </Alert>
             )}
         <p>This action cannot be undone. Learners with revoked licenses must be reinvited.</p>
         <p>

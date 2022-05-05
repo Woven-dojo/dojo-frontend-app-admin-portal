@@ -151,15 +151,15 @@ const LicenseManagementRemindModal = ({
       <ModalDialog.Body>
         {requestState.error
             && (
-            <Alert variant="danger">
-              <p>There was an error with your request. Please try again.</p>
-              <p>
-                If the error persists,{' '};
-                <Hyperlink destination={configuration.ENTERPRISE_SUPPORT_URL}>
-                  contact customer support.
-                </Hyperlink>
-              </p>
-            </Alert>
+              <Alert variant="danger">
+                <p>There was an error with your request. Please try again.</p>
+                <p>
+                  If the error persists,{' '};
+                  <Hyperlink destination={configuration.ENTERPRISE_SUPPORT_URL}>
+                    contact customer support.
+                  </Hyperlink>
+                </p>
+              </Alert>
             )}
         <h3 className="h4">Email Template</h3>
         <Form>

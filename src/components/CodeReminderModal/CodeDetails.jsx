@@ -7,15 +7,15 @@ const CodeDetails = ({
 }) => (
   <div className="assignment-details mb-4">
     {!isBulkRemind && hasIndividualRemindData && (
-    <>
-      <p data-hj-suppress>{displayCode(data.code)}</p>
-      <p data-hj-suppress>{displayEmail(data.email)}</p>
-    </>
+      <>
+        <p data-hj-suppress>{displayCode(data.code)}</p>
+        <p data-hj-suppress>{displayEmail(data.email)}</p>
+      </>
     )}
     {isBulkRemind && numberOfSelectedCodes > 0 && (
-    <>
-      <p className="bulk-selected-codes">{displaySelectedCodes(numberOfSelectedCodes)}</p>
-    </>
+      <>
+        <p className="bulk-selected-codes">{displaySelectedCodes(numberOfSelectedCodes)}</p>
+      </>
     )}
   </div>
 );

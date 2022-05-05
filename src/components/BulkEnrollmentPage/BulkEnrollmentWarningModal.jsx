@@ -17,7 +17,7 @@ const BulkEnrollWarningModal = ({
         <Icon className="enroll-header mr-1" src={Error} />
         Revoked Learners Selected
       </>
-      )}
+    )}
     isOpen={isDialogOpen}
     footerNode={(
       <ActionRow>

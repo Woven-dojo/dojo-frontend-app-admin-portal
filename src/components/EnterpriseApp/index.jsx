@@ -222,12 +222,12 @@ class EnterpriseApp extends React.Component {
                   )}
                   {features.EXTERNAL_LMS_CONFIGURATION && enableLmsConfigurationsScreen
                     && (
-                    <Route
-                      key="lms-integrations"
-                      exact
-                      path={`${baseUrl}/admin/lmsintegrations`}
-                      render={routeProps => <LmsConfigurations {...routeProps} />}
-                    />
+                      <Route
+                        key="lms-integrations"
+                        exact
+                        path={`${baseUrl}/admin/lmsintegrations`}
+                        render={routeProps => <LmsConfigurations {...routeProps} />}
+                      />
                     )}
                   <Route
                     exact
