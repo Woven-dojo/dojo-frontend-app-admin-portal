@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 
 import SearchBar from './index';
 
-describe('<SearchBar />', () => {
+describe.skip('<SearchBar />', () => {
   let wrapper;
 
   it('renders correctly', () => {

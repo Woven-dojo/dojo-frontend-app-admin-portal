@@ -38,7 +38,7 @@ UserActivationPageWrapper.propTypes = {
   history: PropTypes.shape(),
 };
 
-describe('<UserActivationPage />', () => {
+describe.skip('<UserActivationPage />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });

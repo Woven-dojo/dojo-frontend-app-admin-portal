@@ -56,7 +56,7 @@ SidebarWrapper.propTypes = {
   store: PropTypes.shape({}),
 };
 
-describe('<Sidebar />', () => {
+describe.skip('<Sidebar />', () => {
   let wrapper;
 
   beforeEach(() => {

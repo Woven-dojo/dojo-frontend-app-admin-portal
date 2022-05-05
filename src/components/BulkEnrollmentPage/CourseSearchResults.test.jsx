@@ -89,7 +89,7 @@ const CourseSearchWrapper = ({ value = { refinements }, props = defaultProps }) 
   </Provider>
 );
 
-describe('<CourseSearchResults />', () => {
+describe.skip('<CourseSearchResults />', () => {
   it('renders search results', () => {
     const wrapper = mount(<CourseSearchWrapper />);
 

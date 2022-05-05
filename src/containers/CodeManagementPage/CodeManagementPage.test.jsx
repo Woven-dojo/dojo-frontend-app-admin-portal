@@ -73,7 +73,7 @@ const sampleCouponData = {
   usage_limitation: 'Multi-use',
 };
 
-describe('CodeManagementPageWrapper', () => {
+describe.skip('CodeManagementPageWrapper', () => {
   describe('renders', () => {
     it('renders empty results correctly', () => {
       const tree = renderer

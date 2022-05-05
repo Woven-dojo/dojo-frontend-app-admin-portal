@@ -124,7 +124,7 @@ const verifyLearnerActivityTableRendered = (tableId, activity, columnTitles, row
   });
 };
 
-describe('LearnerActivityTable', () => {
+describe.skip('LearnerActivityTable', () => {
   it('renders empty state correctly', () => {
     const tree = renderer
       .create((

@@ -96,7 +96,7 @@ describe('generateSuccessMessage', () => {
   });
 });
 
-describe('BulkEnrollmentAlertModal', () => {
+describe.skip('BulkEnrollmentAlertModal', () => {
   beforeEach(() => {
     defaultAlertProps.toggleClose.mockClear();
   });
@@ -132,7 +132,7 @@ describe('BulkEnrollmentAlertModal', () => {
   });
 });
 
-describe('BulkEnrollmentSubmit', () => {
+describe.skip('BulkEnrollmentSubmit', () => {
   const flushPromises = () => new Promise(setImmediate);
   beforeEach(() => {
     emailsDispatch.mockClear();

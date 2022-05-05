@@ -85,7 +85,7 @@ const LicenseManagementTableBulkActionsWithContext = (props) => (
   </Provider>
 );
 
-describe('<LicenseManagementTableBulkActions />', () => {
+describe.skip('<LicenseManagementTableBulkActions />', () => {
   afterEach(() => {
     cleanup();
     jest.clearAllMocks();
