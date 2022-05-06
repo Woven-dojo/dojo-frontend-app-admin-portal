@@ -37,7 +37,7 @@
     "@fortawesome/free-regular-svg-icons": "5.15.3",
     "@fortawesome/free-solid-svg-icons": "5.15.3",
     "@fortawesome/react-fontawesome": "0.1.14",
-    "@reustleco/dojo-frontend-common": "1.1.0-alpha.3 ",
+    "@reustleco/dojo-frontend-common": "1.1.1",
     "@sentry/react": "^6.19.6",
     "@sentry/tracing": "^6.19.6",
     "algoliasearch": "4.8.3",
