@@ -124,6 +124,7 @@ const verifyLearnerActivityTableRendered = (tableId, activity, columnTitles, row
   });
 };
 
+// todo: [DP-110] fix test
 describe.skip('LearnerActivityTable', () => {
   it('renders empty state correctly', () => {
     const tree = renderer

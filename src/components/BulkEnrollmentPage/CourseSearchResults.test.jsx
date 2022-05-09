@@ -89,6 +89,7 @@ const CourseSearchWrapper = ({ value = { refinements }, props = defaultProps }) 
   </Provider>
 );
 
+// todo: [DP-110] fix test
 describe.skip('<CourseSearchResults />', () => {
   it('renders search results', () => {
     const wrapper = mount(<CourseSearchWrapper />);

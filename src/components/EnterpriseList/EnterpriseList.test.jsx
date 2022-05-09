@@ -50,6 +50,7 @@ const EnterpriseListWrapper = ({ initialEntries, ...rest }) => (
   </MemoryRouter>
 );
 
+// todo: [DP-110] fix test
 describe.skip('<EnterpriseList />', () => {
   let wrapper;
 

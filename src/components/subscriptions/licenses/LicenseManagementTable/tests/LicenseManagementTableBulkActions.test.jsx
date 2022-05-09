@@ -85,6 +85,7 @@ const LicenseManagementTableBulkActionsWithContext = (props) => (
   </Provider>
 );
 
+// todo: [DP-110] fix test
 describe.skip('<LicenseManagementTableBulkActions />', () => {
   afterEach(() => {
     cleanup();

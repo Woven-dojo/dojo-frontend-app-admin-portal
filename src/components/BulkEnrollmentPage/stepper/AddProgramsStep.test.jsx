@@ -32,6 +32,7 @@ const StepperWrapper = (props) => {
   );
 };
 
+// todo: [DP-110] fix test
 describe.skip('AddProgramsStep', () => {
   it('displays a title', () => {
     renderWithRouter(<StepperWrapper {...defaultProps} />);

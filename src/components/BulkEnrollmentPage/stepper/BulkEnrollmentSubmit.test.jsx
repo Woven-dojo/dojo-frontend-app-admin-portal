@@ -96,6 +96,7 @@ describe('generateSuccessMessage', () => {
   });
 });
 
+// todo: [DP-110] fix test
 describe.skip('BulkEnrollmentAlertModal', () => {
   beforeEach(() => {
     defaultAlertProps.toggleClose.mockClear();
@@ -132,6 +133,7 @@ describe.skip('BulkEnrollmentAlertModal', () => {
   });
 });
 
+// todo: [DP-100] fix test
 describe.skip('BulkEnrollmentSubmit', () => {
   const flushPromises = () => new Promise(setImmediate);
   beforeEach(() => {

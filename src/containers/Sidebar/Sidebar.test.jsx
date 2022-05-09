@@ -56,6 +56,7 @@ SidebarWrapper.propTypes = {
   store: PropTypes.shape({}),
 };
 
+// todo: [DP-110] fix test
 describe.skip('<Sidebar />', () => {
   let wrapper;
 

@@ -64,6 +64,7 @@ const AdminWrapper = props => (
   </MemoryRouter>
 );
 
+// todo: [DP-110] fix test
 describe.skip('<Admin />', () => {
   const baseProps = {
     activeLearners: {

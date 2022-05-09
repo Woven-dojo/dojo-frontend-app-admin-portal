@@ -4,6 +4,7 @@ import { mount } from 'enzyme';
 
 import SearchBar from './index';
 
+// todo: [DP-110] fix test
 describe.skip('<SearchBar />', () => {
   let wrapper;
 
