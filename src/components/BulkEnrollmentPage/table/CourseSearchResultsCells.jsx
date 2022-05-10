@@ -33,7 +33,7 @@ export const CourseNameCell = ({ value, row, enterpriseSlug }) => (
           </a>
         </Popover.Content>
       </Popover>
-      )}
+    )}
   >
     <Button variant="link">{value}</Button>
   </OverlayTrigger>

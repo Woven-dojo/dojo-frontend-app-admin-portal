@@ -33,14 +33,14 @@ const ConfigError = ({
       </p>
     )}
     {!configTextOverride && code >= 500 && (
-    <p>
-      {cardText500}
-    </p>
+      <p>
+        {cardText500}
+      </p>
     )}
     {!configTextOverride && code <= 499 && (
-    <p>
-      {cardText400}
-    </p>
+      <p>
+        {cardText400}
+      </p>
     )}
   </AlertModal>
 );

@@ -90,7 +90,7 @@ class CouponDetails extends React.Component {
           name="select all codes"
           label={
             <div className="sr-only">{this.getSelectAllCheckBoxLabel()}</div>
-            }
+          }
           onChange={(checked) => {
             this.hasAllTableRowsSelected = checked;
             this.handleSelectAllCodes(checked);

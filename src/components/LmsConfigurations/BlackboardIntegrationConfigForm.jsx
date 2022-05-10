@@ -21,11 +21,14 @@ export const REQUIRED_BLACKBOARD_CONFIG_FIELDS = [
 ];
 
 class BlackboardIntegrationConfigForm extends React.Component {
-  state = {
-    invalidFields: {},
-    submitState: SUBMIT_STATES.DEFAULT,
-    active: this.props.config?.active,
-    error: undefined,
+  constructor(props) {
+    super(props);
+    this.state = {
+      invalidFields: {},
+      submitState: SUBMIT_STATES.DEFAULT,
+      active: this.props.config?.active,
+      error: undefined,
+    };
   }
 
   /**
@@ -37,25 +40,30 @@ class BlackboardIntegrationConfigForm extends React.Component {
     const transformedData = snakeCaseFormData(formData);
     transformedData.append('enterprise_customer', this.props.enterpriseId);
     try {
-      const response = await LmsApiService.postNewBlackboardConfig(transformedData);
+      const response = await LmsApiService.postNewBlackboardConfig(
+        transformedData,
+      );
       this.setState({ config: response.data, error: undefined });
       return undefined;
     } catch (error) {
       return handleErrors(error);
     }
-  }
+  };
 
   updateBlackboardConfig = async (formData, configUuid) => {
     const transformedData = snakeCaseFormData(formData);
     transformedData.append('enterprise_customer', this.props.enterpriseId);
     try {
-      const response = await LmsApiService.updateBlackboardConfig(transformedData, configUuid);
+      const response = await LmsApiService.updateBlackboardConfig(
+        transformedData,
+        configUuid,
+      );
       this.setState({ config: response.data, error: undefined });
       return undefined;
     } catch (error) {
       return handleErrors(error);
     }
-  }
+  };
 
   /**
    * attempt to submit the form data and show any error states or invalid fields.
@@ -63,7 +71,10 @@ class BlackboardIntegrationConfigForm extends React.Component {
    */
   handleSubmit = async (formData, config) => {
     this.setState({ submitState: SUBMIT_STATES.PENDING });
-    const invalidFields = validateLmsConfigForm(formData, REQUIRED_BLACKBOARD_CONFIG_FIELDS);
+    const invalidFields = validateLmsConfigForm(
+      formData,
+      REQUIRED_BLACKBOARD_CONFIG_FIELDS,
+    );
     if (!isEmpty(invalidFields)) {
       this.setState({
         invalidFields: {
@@ -90,14 +101,11 @@ class BlackboardIntegrationConfigForm extends React.Component {
       return;
     }
     this.setState({ submitState: SUBMIT_STATES.COMPLETE });
-  }
+  };
 
   render() {
     const {
-      invalidFields,
-      submitState,
-      active,
-      error,
+      invalidFields, submitState, active, error,
     } = this.state;
     const { config } = this.props;
 
@@ -120,15 +128,16 @@ class BlackboardIntegrationConfigForm extends React.Component {
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.target);
-          this.handleSubmit(formData, this.state.config ? this.state.config : config);
+          this.handleSubmit(
+            formData,
+            this.state.config ? this.state.config : config,
+          );
         }}
         onChange={() => this.setState({ submitState: SUBMIT_STATES.DEFAULT })}
       >
         <div className="row">
           <div className="col col-6">
-            <ValidationFormGroup
-              for="active"
-            >
+            <ValidationFormGroup for="active">
               <label htmlFor="active">Active</label>
               <Input
                 type="checkbox"
@@ -136,7 +145,7 @@ class BlackboardIntegrationConfigForm extends React.Component {
                 name="active"
                 className="ml-3"
                 checked={active}
-                onChange={() => this.setState(prevState => ({ active: !prevState.active }))}
+                onChange={() => this.setState((prevState) => ({ active: !prevState.active }))}
               />
             </ValidationFormGroup>
           </div>
@@ -219,14 +228,18 @@ class BlackboardIntegrationConfigForm extends React.Component {
         <div className="row">
           <div className="col col-4">
             {config?.oauthAuthorizationUrl && (
-            <div className="form-group align-items-left">
-              <Hyperlink destination={config ? config.oauthAuthorizationUrl : null} target="_blank">
-                Authorize
-              </Hyperlink>
-              <p className="small">
-                OAuth Authorization Link. Will be available once Base URL and Client ID are supplied.
-              </p>
-            </div>
+              <div className="form-group align-items-left">
+                <Hyperlink
+                  destination={config ? config.oauthAuthorizationUrl : null}
+                  target="_blank"
+                >
+                  Authorize
+                </Hyperlink>
+                <p className="small">
+                  OAuth Authorization Link. Will be available once Base URL and
+                  Client ID are supplied.
+                </p>
+              </div>
             )}
           </div>
         </div>
@@ -256,9 +269,7 @@ class BlackboardIntegrationConfigForm extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col col-3 mt-3">
-            {errorAlert}
-          </div>
+          <div className="col col-3 mt-3">{errorAlert}</div>
         </div>
       </form>
     );

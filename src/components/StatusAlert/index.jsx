@@ -24,7 +24,7 @@ const StatusAlert = (props) => {
           classNames({
             'd-flex': iconClassName,
           })
-}
+        }
         >
           {iconClassName && (
             <div className="icon mr-2">

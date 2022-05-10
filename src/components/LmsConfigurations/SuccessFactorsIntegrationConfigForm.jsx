@@ -20,12 +20,15 @@ export const REQUIRED_SUCCESS_FACTOR_CONFIG_FIELDS = [
 ];
 
 class SuccessFactorsIntegrationConfigForm extends React.Component {
-  state = {
-    invalidFields: {},
-    submitState: SUBMIT_STATES.DEFAULT,
-    active: this.props.config?.active,
-    error: null,
-    transmitTotalHours: this.props.config?.transmitTotalHours,
+  constructor(props) {
+    super(props);
+    this.state = {
+      invalidFields: {},
+      submitState: SUBMIT_STATES.DEFAULT,
+      active: this.props.config?.active,
+      error: null,
+      transmitTotalHours: this.props.config?.transmitTotalHours,
+    };
   }
 
   /**
@@ -37,30 +40,39 @@ class SuccessFactorsIntegrationConfigForm extends React.Component {
     const transformedData = snakeCaseFormData(formData);
     transformedData.append('enterprise_customer', this.props.enterpriseId);
     try {
-      const response = await LmsApiService.postNewSuccessFactorsConfig(transformedData);
+      const response = await LmsApiService.postNewSuccessFactorsConfig(
+        transformedData,
+      );
       return this.setState({ config: response.data });
     } catch (error) {
       return handleErrors(error);
     }
-  }
+  };
 
   updateSuccessFactorsConfig = async (formData, configId) => {
     const transformedData = snakeCaseFormData(formData);
     transformedData.append('enterprise_customer', this.props.enterpriseId);
     try {
-      const response = await LmsApiService.updateSuccessFactorsConfig(transformedData, configId);
+      const response = await LmsApiService.updateSuccessFactorsConfig(
+        transformedData,
+        configId,
+      );
       return this.setState({ config: response.data });
     } catch (error) {
       return handleErrors(error);
     }
-  }
+  };
 
   /**
    * attempt to submit the form data and show any error states or invalid fields.
    * @param {FormData} formData
    */
   handleSubmit = async (formData, config) => {
-    this.setState({ submitState: SUBMIT_STATES.PENDING, error: null, invalidFields: {} });
+    this.setState({
+      submitState: SUBMIT_STATES.PENDING,
+      error: null,
+      invalidFields: {},
+    });
     const requiredFields = [...REQUIRED_SUCCESS_FACTOR_CONFIG_FIELDS];
 
     // validate the form
@@ -97,15 +109,11 @@ class SuccessFactorsIntegrationConfigForm extends React.Component {
         this.setState({ submitState: SUBMIT_STATES.COMPLETE });
       }
     }
-  }
+  };
 
   render() {
     const {
-      invalidFields,
-      submitState,
-      active,
-      error,
-      transmitTotalHours,
+      invalidFields, submitState, active, error, transmitTotalHours,
     } = this.state;
     const { config } = this.props;
 
@@ -114,15 +122,16 @@ class SuccessFactorsIntegrationConfigForm extends React.Component {
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.target);
-          this.handleSubmit(formData, this.state.config ? this.state.config : config);
+          this.handleSubmit(
+            formData,
+            this.state.config ? this.state.config : config,
+          );
         }}
         onChange={() => this.setState({ submitState: SUBMIT_STATES.DEFAULT })}
       >
         <div className="row">
           <div className="col col-6">
-            <ValidationFormGroup
-              for="active"
-            >
+            <ValidationFormGroup for="active">
               <label htmlFor="active">Active</label>
               <Input
                 type="checkbox"
@@ -130,7 +139,7 @@ class SuccessFactorsIntegrationConfigForm extends React.Component {
                 name="active"
                 className="ml-3"
                 checked={active}
-                onChange={() => this.setState(prevState => ({ active: !prevState.active }))}
+                onChange={() => this.setState((prevState) => ({ active: !prevState.active }))}
               />
             </ValidationFormGroup>
           </div>
@@ -143,7 +152,9 @@ class SuccessFactorsIntegrationConfigForm extends React.Component {
               invalidMessage="SAP Success Factors Instance URL is required."
               helpText="Your SAP Success Factors instance URL. Make sure to include the protocol (ie https/http)"
             >
-              <label htmlFor="sapsfBaseUrl">SAP Success Factors Instance URL</label>
+              <label htmlFor="sapsfBaseUrl">
+                SAP Success Factors Instance URL
+              </label>
               <Input
                 type="text"
                 id="sapsfBaseUrl"
@@ -161,7 +172,9 @@ class SuccessFactorsIntegrationConfigForm extends React.Component {
               invalidMessage="SAP Success Factors Company Id field is required."
               helpText="This should match the Company Id as found in SAP Success Factors."
             >
-              <label htmlFor="sapsfCompanyId">SAP Success Factors Company Id</label>
+              <label htmlFor="sapsfCompanyId">
+                SAP Success Factors Company Id
+              </label>
               <Input
                 type="text"
                 id="sapsfCompanyId"
@@ -265,7 +278,9 @@ class SuccessFactorsIntegrationConfigForm extends React.Component {
                 name="transmitTotalHours"
                 className="ml-3"
                 checked={transmitTotalHours}
-                onChange={() => this.setState(prevState => ({ transmitTotalHours: !prevState.transmitTotalHours }))}
+                onChange={() => this.setState((prevState) => ({
+                  transmitTotalHours: !prevState.transmitTotalHours,
+                }))}
                 data-hj-suppress
               />
             </ValidationFormGroup>

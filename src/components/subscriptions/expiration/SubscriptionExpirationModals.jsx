@@ -125,20 +125,20 @@ const SubscriptionExpirationModals = ({ enterpriseId }) => {
 
   return (showExpirationNotifications
     && (
-    <>
-      <SubscriptionExpiringModal
-        isOpen={isExpiringModalOpen}
-        onClose={() => handleCloseModal(closeExpiringModal)}
-        onAction={() => emitAlertActionEvent(false)}
-        expirationThreshold={subscriptionExpirationThreshold}
-        enterpriseId={enterpriseId}
-      />
-      <SubscriptionExpiredModal
-        isOpen={isExpiredModalOpen}
-        onClose={() => handleCloseModal(closeExpiredModal)}
-        onAction={() => emitAlertActionEvent(false)}
-      />
-    </>
+      <>
+        <SubscriptionExpiringModal
+          isOpen={isExpiringModalOpen}
+          onClose={() => handleCloseModal(closeExpiringModal)}
+          onAction={() => emitAlertActionEvent(false)}
+          expirationThreshold={subscriptionExpirationThreshold}
+          enterpriseId={enterpriseId}
+        />
+        <SubscriptionExpiredModal
+          isOpen={isExpiredModalOpen}
+          onClose={() => handleCloseModal(closeExpiredModal)}
+          onAction={() => emitAlertActionEvent(false)}
+        />
+      </>
     )
   );
 };

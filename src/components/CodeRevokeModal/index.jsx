@@ -177,11 +177,11 @@ class CodeRevokeModal extends React.Component {
       <>
         {submitFailed
           && (
-          <ModalError
-            title={ERROR_MESSAGE_TITLES[mode]}
-            errors={error}
-            ref={this.errorMessageRef}
-          />
+            <ModalError
+              title={ERROR_MESSAGE_TITLES[mode]}
+              errors={error}
+              ref={this.errorMessageRef}
+            />
           )}
         <div className="assignment-details mb-4">
           {isBulkRevoke && (

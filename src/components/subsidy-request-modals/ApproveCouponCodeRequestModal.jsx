@@ -140,10 +140,10 @@ export const ApproveCouponCodeRequestModal = ({
             </>
           )}
           {applicableCoupons.length > 0 && (
-          <p>
-            <strong>Please note:</strong>{' '}
-            Learners can apply this code to any course, not just the one they requested.
-          </p>
+            <p>
+              <strong>Please note:</strong>{' '}
+              Learners can apply this code to any course, not just the one they requested.
+            </p>
           )}
           {!isLoadingApplicableCoupons && applicableCoupons.length === 0 && (
             <Alert

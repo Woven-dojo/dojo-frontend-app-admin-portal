@@ -107,46 +107,46 @@ const LicenseManagementTableActionColumn = ({
     <>
       {displayRemind
       && (
-      <OverlayTrigger
-        placement="top"
-        overlay={(
-          <Tooltip id="tooltip-remind">
-            {remindText}
-          </Tooltip>
-        )}
-      >
-        <IconButton
-          alt={remindText}
-          title={remindText}
-          src={Email}
-          iconAs={Icon}
-          variant="secondary"
-          onClick={() => remindOnClick(user)}
-          disabled={disabled}
-        />
-      </OverlayTrigger>
+        <OverlayTrigger
+          placement="top"
+          overlay={(
+            <Tooltip id="tooltip-remind">
+              {remindText}
+            </Tooltip>
+          )}
+        >
+          <IconButton
+            alt={remindText}
+            title={remindText}
+            src={Email}
+            iconAs={Icon}
+            variant="secondary"
+            onClick={() => remindOnClick(user)}
+            disabled={disabled}
+          />
+        </OverlayTrigger>
       )}
       {displayRevoked
       && (
-      <OverlayTrigger
-        placement="top"
-        overlay={(
-          <Tooltip id="tooltip-revoke">
-            {revokeText}
-          </Tooltip>
-        )}
-      >
-        <IconButton
-          alt={revokeText}
-          title={revokeText}
-          src={RemoveCircle}
-          style={{ marginLeft: displayRemind ? 0 : 44 }}
-          iconAs={Icon}
-          variant="danger"
-          onClick={() => revokeOnClick(user)}
-          disabled={disabled}
-        />
-      </OverlayTrigger>
+        <OverlayTrigger
+          placement="top"
+          overlay={(
+            <Tooltip id="tooltip-revoke">
+              {revokeText}
+            </Tooltip>
+          )}
+        >
+          <IconButton
+            alt={revokeText}
+            title={revokeText}
+            src={RemoveCircle}
+            style={{ marginLeft: displayRemind ? 0 : 44 }}
+            iconAs={Icon}
+            variant="danger"
+            onClick={() => revokeOnClick(user)}
+            disabled={disabled}
+          />
+        </OverlayTrigger>
       )}
       <LicenseManagementRevokeModal
         isOpen={revokeModal.isOpen}

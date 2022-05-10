@@ -13,16 +13,19 @@ import LoadingMessage from '../LoadingMessage';
 import ErrorPage from '../ErrorPage';
 
 class LmsConfigurations extends React.Component {
-  state = {
-    moodleConfig: null,
-    canvasConfig: null,
-    blackboardConfig: null,
-    sapsfConfig: null,
-    degreedConfig: null,
-    cornerstoneConfig: null,
-    error: null,
-    loading: true,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      moodleConfig: null,
+      canvasConfig: null,
+      blackboardConfig: null,
+      sapsfConfig: null,
+      degreedConfig: null,
+      cornerstoneConfig: null,
+      error: null,
+      loading: true,
+    };
+  }
 
   componentDidMount() {
     Promise.allSettled([
@@ -33,10 +36,15 @@ class LmsConfigurations extends React.Component {
       LmsApiService.fetchDegreedConfig(this.props.enterpriseId),
       LmsApiService.fetchCornerstoneConfig(this.props.enterpriseId),
     ]).then((responses) => {
-      if (responses.some(response => response.reason?.request.status === 400
-          || response.reason?.request.status > 404)) {
+      if (
+        responses.some(
+          (response) => response.reason?.request.status === 400
+            || response.reason?.request.status > 404,
+        )
+      ) {
         const errorRsp = responses.filter(
-          response => response.reason?.request.status !== 404 && response.status === 'rejected',
+          (response) => response.reason?.request.status !== 404
+            && response.status === 'rejected',
         );
         const errorMsgs = [];
         let status = '';
@@ -44,21 +52,36 @@ class LmsConfigurations extends React.Component {
           errorMsgs.push(error.reason.request.statusText);
           status = error.reason.request.status;
         });
-        this.setState({ error: { response: { status }, message: errorMsgs.join(';') }, loading: false });
+        this.setState({
+          error: { response: { status }, message: errorMsgs.join(';') },
+          loading: false,
+        });
       } else {
         this.setState({
-          moodleConfig: responses[0].status === 'fulfilled'
-            ? responses[0].value.data.results[0] : null,
-          canvasConfig: responses[1].status === 'fulfilled'
-            ? responses[1].value.data.results[0] : null,
-          blackboardConfig: responses[2].status === 'fulfilled'
-            ? responses[2].value.data.results[0] : null,
-          sapsfConfig: responses[3].status === 'fulfilled'
-            ? responses[3].value.data.results[0] : null,
-          degreedConfig: responses[4].status === 'fulfilled'
-            ? responses[4].value.data.results[0] : null,
-          cornerstoneConfig: responses[5].status === 'fulfilled'
-            ? responses[5].value.data.results[0] : null,
+          moodleConfig:
+            responses[0].status === 'fulfilled'
+              ? responses[0].value.data.results[0]
+              : null,
+          canvasConfig:
+            responses[1].status === 'fulfilled'
+              ? responses[1].value.data.results[0]
+              : null,
+          blackboardConfig:
+            responses[2].status === 'fulfilled'
+              ? responses[2].value.data.results[0]
+              : null,
+          sapsfConfig:
+            responses[3].status === 'fulfilled'
+              ? responses[3].value.data.results[0]
+              : null,
+          degreedConfig:
+            responses[4].status === 'fulfilled'
+              ? responses[4].value.data.results[0]
+              : null,
+          cornerstoneConfig:
+            responses[5].status === 'fulfilled'
+              ? responses[5].value.data.results[0]
+              : null,
           loading: false,
         });
       }
@@ -67,18 +90,21 @@ class LmsConfigurations extends React.Component {
 
   render() {
     const {
-      canvasConfig, moodleConfig, blackboardConfig, sapsfConfig, degreedConfig, cornerstoneConfig,
-      error, loading,
+      canvasConfig,
+      moodleConfig,
+      blackboardConfig,
+      sapsfConfig,
+      degreedConfig,
+      cornerstoneConfig,
+      error,
+      loading,
     } = this.state;
     if (loading) {
       return <LoadingMessage className="overview" />;
     }
     if (error && error.response?.status !== 404) {
       return (
-        <ErrorPage
-          status={error.response?.status}
-          message={error.message}
-        />
+        <ErrorPage status={error.response?.status} message={error.message} />
       );
     }
     if (moodleConfig) {
@@ -132,76 +158,50 @@ class LmsConfigurations extends React.Component {
 
     return (
       <>
-        <div
-          key="moodle-form-link"
-          className="mb-3"
-        >
-          <Collapsible
-            styling="card"
-            className="shadow"
-            title="Moodle"
-          >
-            <MoodleIntegrationConfigForm enterpriseId={this.props.enterpriseId} />
+        <div key="moodle-form-link" className="mb-3">
+          <Collapsible styling="card" className="shadow" title="Moodle">
+            <MoodleIntegrationConfigForm
+              enterpriseId={this.props.enterpriseId}
+            />
           </Collapsible>
         </div>
-        <div
-          key="successfactors-form-link"
-          className="mb-3"
-        >
+        <div key="successfactors-form-link" className="mb-3">
           <Collapsible
             styling="card"
             className="shadow"
             title="SAP Success Factors"
           >
-            <SuccessFactorsIntegrationConfigForm enterpriseId={this.props.enterpriseId} />
+            <SuccessFactorsIntegrationConfigForm
+              enterpriseId={this.props.enterpriseId}
+            />
           </Collapsible>
         </div>
-        <div
-          key="canvas-form-link"
-          className="mb-3"
-        >
-          <Collapsible
-            styling="card"
-            className="shadow"
-            title="Canvas"
-          >
-            <CanvasIntegrationConfigForm enterpriseId={this.props.enterpriseId} />
+        <div key="canvas-form-link" className="mb-3">
+          <Collapsible styling="card" className="shadow" title="Canvas">
+            <CanvasIntegrationConfigForm
+              enterpriseId={this.props.enterpriseId}
+            />
           </Collapsible>
         </div>
-        <div
-          key="blackboard-form-link"
-          className="mb-3"
-        >
-          <Collapsible
-            styling="card"
-            className="shadow"
-            title="Blackboard"
-          >
-            <BlackboardIntegrationConfigForm enterpriseId={this.props.enterpriseId} />
+        <div key="blackboard-form-link" className="mb-3">
+          <Collapsible styling="card" className="shadow" title="Blackboard">
+            <BlackboardIntegrationConfigForm
+              enterpriseId={this.props.enterpriseId}
+            />
           </Collapsible>
         </div>
-        <div
-          key="degreed-form-link"
-          className="mb-3"
-        >
-          <Collapsible
-            styling="card"
-            className="shadow"
-            title="Degreed"
-          >
-            <DegreedIntegrationConfigForm enterpriseId={this.props.enterpriseId} />
+        <div key="degreed-form-link" className="mb-3">
+          <Collapsible styling="card" className="shadow" title="Degreed">
+            <DegreedIntegrationConfigForm
+              enterpriseId={this.props.enterpriseId}
+            />
           </Collapsible>
         </div>
-        <div
-          key="cornerstone-form-link"
-          className="mb-3"
-        >
-          <Collapsible
-            styling="card"
-            className="shadow"
-            title="Cornerstone"
-          >
-            <CornerstoneIntegrationConfigForm enterpriseId={this.props.enterpriseId} />
+        <div key="cornerstone-form-link" className="mb-3">
+          <Collapsible styling="card" className="shadow" title="Cornerstone">
+            <CornerstoneIntegrationConfigForm
+              enterpriseId={this.props.enterpriseId}
+            />
           </Collapsible>
         </div>
       </>
