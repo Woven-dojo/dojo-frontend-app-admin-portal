@@ -124,8 +124,7 @@ const verifyLearnerActivityTableRendered = (tableId, activity, columnTitles, row
   });
 };
 
-// todo: [DP-110] fix test
-describe.skip('LearnerActivityTable', () => {
+describe('LearnerActivityTable', () => {
   it('renders empty state correctly', () => {
     const tree = renderer
       .create((
@@ -181,7 +180,7 @@ describe.skip('LearnerActivityTable', () => {
         'awesome.me@example.com',
         'Dive into ReactJS',
         '$200',
-        'October 21, 2017',
+        'October 22, 2017',
         'May 13, 2018',
         'September 23, 2018',
         '66%',
@@ -192,7 +191,7 @@ describe.skip('LearnerActivityTable', () => {
         'new@example.com',
         'Redux with ReactJS',
         '$200',
-        'October 21, 2017',
+        'October 22, 2017',
         'May 13, 2018',
         'September 22, 2018',
         '80%',
@@ -222,7 +221,7 @@ describe.skip('LearnerActivityTable', () => {
         'awesome.me@example.com',
         'Dive into ReactJS',
         '$200',
-        'October 21, 2017',
+        'October 22, 2017',
         'May 13, 2018',
         '66%',
         'Failed',
@@ -232,7 +231,7 @@ describe.skip('LearnerActivityTable', () => {
         'new@example.com',
         'Redux with ReactJS',
         '$200',
-        'October 21, 2017',
+        'October 22, 2017',
         'May 13, 2018',
         '80%',
         'Passed',
@@ -261,7 +260,7 @@ describe.skip('LearnerActivityTable', () => {
         'awesome.me@example.com',
         'Dive into ReactJS',
         '$200',
-        'October 21, 2017',
+        'October 22, 2017',
         'May 13, 2018',
         '66%',
         'Failed',
@@ -271,7 +270,7 @@ describe.skip('LearnerActivityTable', () => {
         'new@example.com',
         'Redux with ReactJS',
         '$200',
-        'October 21, 2017',
+        'October 22, 2017',
         'May 13, 2018',
         '80%',
         'Passed',

@@ -75,7 +75,7 @@ exports[`CodeManagementPageWrapper renders renders empty results correctly 1`] =
             >
               <svg
                 aria-hidden="true"
-                className="svg-inline--fa fa-search "
+                className="svg-inline--fa fa-search fa-w-16 "
                 data-icon="search"
                 data-prefix="fas"
                 focusable="false"
@@ -260,7 +260,7 @@ exports[`CodeManagementPageWrapper renders renders error state correctly 1`] = `
             >
               <svg
                 aria-hidden="true"
-                className="svg-inline--fa fa-search "
+                className="svg-inline--fa fa-search fa-w-16 "
                 data-icon="search"
                 data-prefix="fas"
                 focusable="false"
@@ -450,7 +450,7 @@ exports[`CodeManagementPageWrapper renders renders loading state correctly 1`] =
             >
               <svg
                 aria-hidden="true"
-                className="svg-inline--fa fa-search "
+                className="svg-inline--fa fa-search fa-w-16 "
                 data-icon="search"
                 data-prefix="fas"
                 focusable="false"
@@ -617,7 +617,7 @@ exports[`CodeManagementPageWrapper renders renders non-empty results correctly 1
             >
               <svg
                 aria-hidden="true"
-                className="svg-inline--fa fa-search "
+                className="svg-inline--fa fa-search fa-w-16 "
                 data-icon="search"
                 data-prefix="fas"
                 focusable="false"
@@ -732,7 +732,7 @@ exports[`CodeManagementPageWrapper renders renders non-empty results correctly 1
                     Valid From
                   </small>
                   <div>
-                    January 3, 2019
+                    January 4, 2019
                   </div>
                 </div>
                 <div
@@ -849,7 +849,7 @@ exports[`CodeManagementPageWrapper renders renders non-empty results correctly 1
                     Valid From
                   </small>
                   <div>
-                    January 3, 2019
+                    January 4, 2019
                   </div>
                 </div>
                 <div
