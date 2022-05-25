@@ -38,8 +38,7 @@ UserActivationPageWrapper.propTypes = {
   history: PropTypes.shape(),
 };
 
-// todo: [DP-110] fix test
-describe.skip('<UserActivationPage />', () => {
+describe('<UserActivationPage />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -90,7 +89,7 @@ describe.skip('<UserActivationPage />', () => {
     expect(wrapper.find('Alert').exists()).toBeTruthy();
   });
 
-  it('redirects to /admin/learners route when user with verified email is authenticated and has "enterprise_admin" JWT role', () => {
+  it('redirects to /admin/subscriptions route when user with verified email is authenticated and has "enterprise_admin" JWT role', () => {
     getAuthenticatedUser.mockReturnValue({
       username: 'edx',
       roles: ['enterprise_admin:*'],
@@ -102,7 +101,7 @@ describe.skip('<UserActivationPage />', () => {
     });
 
     mount(<UserActivationPageWrapper history={history} />);
-    const expectedRedirectRoute = `/${TEST_ENTERPRISE_SLUG}/admin/learners`;
+    const expectedRedirectRoute = `/${TEST_ENTERPRISE_SLUG}/admin/subscriptions`;
     expect(history.location.pathname).toEqual(expectedRedirectRoute);
   });
 });

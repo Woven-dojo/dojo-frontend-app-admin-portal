@@ -50,8 +50,7 @@ const EnterpriseListWrapper = ({ initialEntries, ...rest }) => (
   </MemoryRouter>
 );
 
-// todo: [DP-110] fix test
-describe.skip('<EnterpriseList />', () => {
+describe('<EnterpriseList />', () => {
   let wrapper;
 
   describe('renders correctly', () => {
@@ -158,7 +157,7 @@ describe.skip('<EnterpriseList />', () => {
           </Provider>
         </MemoryRouter>
       ));
-      const expectedRedirect = <Redirect to="/enterprise-99/admin/learners" />;
+      const expectedRedirect = <Redirect to="/enterprise-99/admin/subscriptions" />;
       expect(wrapper.containsMatchingElement(expectedRedirect)).toEqual(true);
     });
   });

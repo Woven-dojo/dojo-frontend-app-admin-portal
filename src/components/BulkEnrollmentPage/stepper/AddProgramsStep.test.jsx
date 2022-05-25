@@ -11,17 +11,15 @@ import AddProgramsStep from './AddProgramsStep';
 import { renderWithRouter } from '../../test/testUtils';
 
 const defaultProps = {
-  subscriptionUUID: 'fakest-uuid',
   enterpriseSlug: 'sluggy',
-  subscription: { uuid: 'foo', enterpriseCatalogUuid: 'bar' },
   enterpriseId: 'fancyEnt',
 };
 
 const StepperWrapper = (props) => {
-  const selectedCourses = [...Array(8).keys()].map(n => `course-${n}`);
+  const selectedPrograms = [...Array(8).keys()].map(n => `course-${n}`);
   const selectedEmails = [];
   const value = {
-    courses: [selectedCourses, () => {}],
+    programs: [selectedPrograms, () => {}],
     emails: [selectedEmails, () => {}],
     subscription: [{}, () => {}],
   };
@@ -32,8 +30,7 @@ const StepperWrapper = (props) => {
   );
 };
 
-// todo: [DP-110] fix test
-describe.skip('AddProgramsStep', () => {
+describe('AddProgramsStep', () => {
   it('displays a title', () => {
     renderWithRouter(<StepperWrapper {...defaultProps} />);
     expect(screen.getByText(ADD_PROGRAMS_TITLE)).toBeInTheDocument();
@@ -41,7 +38,6 @@ describe.skip('AddProgramsStep', () => {
   it('displays a table', () => {
     renderWithRouter(<StepperWrapper {...defaultProps} />);
     expect(screen.getByText(TABLE_HEADERS.courseName)).toBeInTheDocument();
-    expect(screen.getByText(TABLE_HEADERS.courseAvailability)).toBeInTheDocument();
   });
   it('more than max selected courses causes display of warning dialog text', () => {
     renderWithRouter(<StepperWrapper {...defaultProps} />);

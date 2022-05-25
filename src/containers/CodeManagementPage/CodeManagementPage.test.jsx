@@ -73,8 +73,7 @@ const sampleCouponData = {
   usage_limitation: 'Multi-use',
 };
 
-// todo: [DP-110] fix test
-describe.skip('CodeManagementPageWrapper', () => {
+describe('CodeManagementPageWrapper', () => {
   describe('renders', () => {
     it('renders empty results correctly', () => {
       const tree = renderer

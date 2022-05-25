@@ -56,8 +56,7 @@ SidebarWrapper.propTypes = {
   store: PropTypes.shape({}),
 };
 
-// todo: [DP-110] fix test
-describe.skip('<Sidebar />', () => {
+describe('<Sidebar />', () => {
   let wrapper;
 
   beforeEach(() => {

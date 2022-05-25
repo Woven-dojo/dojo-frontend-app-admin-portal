@@ -21,13 +21,13 @@ import { BulkEnrollContext } from '../BulkEnrollmentContext';
 import { clearSelectionAction } from '../data/actions';
 import { ToastsContext } from '../../Toasts/ToastsProvider';
 import { renderWithRouter } from '../../test/testUtils';
-import LicenseManagerApiService from '../../../data/services/LicenseManagerAPIService';
 import { configuration } from '../../../config';
+import LmsApiService from '../../../data/services/LmsApiService';
 
-jest.mock('../../../data/services/LicenseManagerAPIService', () => ({
+jest.mock('../../../data/services/LmsApiService', () => ({
   __esModule: true, // this property makes it work
   default: {
-    licenseBulkEnroll: jest.fn(),
+    bulkProgramEnrollment: jest.fn(),
   },
 }));
 
@@ -49,33 +49,34 @@ const defaultAlertProps = {
 };
 
 const emailsDispatch = jest.fn();
-const coursesDispatch = jest.fn();
+const programsDispatch = jest.fn();
 
 const defaultBulkEnrollInfo = {
   emails: [[], emailsDispatch],
-  courses: [[], coursesDispatch],
+  programs: [[], programsDispatch],
 };
 
 const userEmails = ['ayy', 'lmao'];
-const courseNames = ['Alex', 'Lael'];
+const programNames = ['Alex', 'Lael'];
+const programUuids = Array(programNames.length);
 
 const selectedEmails = userEmails.map(
   (email, index) => ({ id: index, values: { userEmail: email } }),
 );
-const selectedCourses = courseNames.map(
-  (course) => ({ id: course }),
+const selectedPrograms = programNames.map(
+  (program) => ({ id: program }),
 );
 const bulkEnrollWithAllSelectedRows = {
   emails: [selectedEmails, emailsDispatch],
-  courses: [selectedCourses, coursesDispatch],
+  programs: [selectedPrograms, programsDispatch],
 };
 const bulkEnrollWithEmailsSelectedRows = {
   emails: [selectedEmails, emailsDispatch],
-  courses: [[], coursesDispatch],
+  programs: [[], programsDispatch],
 };
 const bulkEnrollWithCoursesSelectedRows = {
   emails: [[], emailsDispatch],
-  courses: [selectedCourses, coursesDispatch],
+  programs: [selectedPrograms, programsDispatch],
 };
 const addToast = jest.fn();
 
@@ -96,8 +97,7 @@ describe('generateSuccessMessage', () => {
   });
 });
 
-// todo: [DP-110] fix test
-describe.skip('BulkEnrollmentAlertModal', () => {
+describe('BulkEnrollmentAlertModal', () => {
   beforeEach(() => {
     defaultAlertProps.toggleClose.mockClear();
   });
@@ -133,12 +133,11 @@ describe.skip('BulkEnrollmentAlertModal', () => {
   });
 });
 
-// todo: [DP-100] fix test
-describe.skip('BulkEnrollmentSubmit', () => {
+describe('BulkEnrollmentSubmit', () => {
   const flushPromises = () => new Promise(setImmediate);
   beforeEach(() => {
     emailsDispatch.mockClear();
-    coursesDispatch.mockClear();
+    programsDispatch.mockClear();
     addToast.mockClear();
     logError.mockClear();
     defaultProps.onEnrollComplete.mockClear();
@@ -169,7 +168,7 @@ describe.skip('BulkEnrollmentSubmit', () => {
 
   it('tests button is disabled when courses are not selected but emails are', async () => {
     const mockPromiseResolve = Promise.resolve({ data: {} });
-    LicenseManagerApiService.licenseBulkEnroll.mockReturnValue(mockPromiseResolve);
+    LmsApiService.bulkProgramEnrollment.mockReturnValue(mockPromiseResolve);
 
     render(
       <BulkEnrollmentSubmitWrapper
@@ -184,7 +183,7 @@ describe.skip('BulkEnrollmentSubmit', () => {
 
   it('tests button is disabled when emails are not selected but courses are', async () => {
     const mockPromiseResolve = Promise.resolve({ data: {} });
-    LicenseManagerApiService.licenseBulkEnroll.mockReturnValue(mockPromiseResolve);
+    LmsApiService.bulkProgramEnrollment.mockReturnValue(mockPromiseResolve);
 
     render(
       <BulkEnrollmentSubmitWrapper
@@ -199,7 +198,7 @@ describe.skip('BulkEnrollmentSubmit', () => {
 
   it('tests passing correct data to api call', async () => {
     const mockPromiseResolve = Promise.resolve({ data: {} });
-    LicenseManagerApiService.licenseBulkEnroll.mockReturnValue(mockPromiseResolve);
+    LmsApiService.bulkProgramEnrollment.mockReturnValue(mockPromiseResolve);
 
     render(
       <BulkEnrollmentSubmitWrapper
@@ -212,13 +211,12 @@ describe.skip('BulkEnrollmentSubmit', () => {
 
     const expectedParams = {
       emails: userEmails,
-      course_run_keys: courseNames,
+      enterprise_uuid: defaultAlertProps.enterpriseId,
       notify: true,
+      program_uuids: programUuids,
     };
 
-    expect(LicenseManagerApiService.licenseBulkEnroll).toHaveBeenCalledWith(
-      defaultProps.enterpriseId,
-      defaultProps.subscription.uuid,
+    expect(LmsApiService.bulkProgramEnrollment).toHaveBeenCalledWith(
       expectedParams,
     );
     expect(logError).toBeCalledTimes(0);
@@ -227,7 +225,7 @@ describe.skip('BulkEnrollmentSubmit', () => {
 
   it('tests notify toggle disables param to api service', async () => {
     const mockPromiseResolve = Promise.resolve({ data: {} });
-    LicenseManagerApiService.licenseBulkEnroll.mockReturnValue(mockPromiseResolve);
+    LmsApiService.bulkProgramEnrollment.mockReturnValue(mockPromiseResolve);
 
     render(
       <BulkEnrollmentSubmitWrapper
@@ -242,12 +240,11 @@ describe.skip('BulkEnrollmentSubmit', () => {
 
     const expectedParams = {
       emails: userEmails,
-      course_run_keys: courseNames,
-      notify: false,
+      enterprise_uuid: defaultAlertProps.enterpriseId,
+      notify: true,
+      program_uuids: programUuids,
     };
-    expect(LicenseManagerApiService.licenseBulkEnroll).toHaveBeenCalledWith(
-      defaultProps.enterpriseId,
-      defaultProps.subscription.uuid,
+    expect(LmsApiService.bulkProgramEnrollment).toHaveBeenCalledWith(
       expectedParams,
     );
     expect(logError).toBeCalledTimes(0);
@@ -256,7 +253,7 @@ describe.skip('BulkEnrollmentSubmit', () => {
 
   it('test component clears selected emails and courses after successful submit', async () => {
     const mockPromiseResolve = Promise.resolve({ data: {} });
-    LicenseManagerApiService.licenseBulkEnroll.mockReturnValue(mockPromiseResolve);
+    LmsApiService.bulkProgramEnrollment.mockReturnValue(mockPromiseResolve);
 
     render(
       <BulkEnrollmentSubmitWrapper
@@ -268,12 +265,12 @@ describe.skip('BulkEnrollmentSubmit', () => {
     await userEvent.click(button);
 
     expect(emailsDispatch).toBeCalledTimes(1);
-    expect(coursesDispatch).toBeCalledTimes(1);
+    expect(programsDispatch).toBeCalledTimes(1);
 
     expect(emailsDispatch).toHaveBeenCalledWith(
       clearSelectionAction(),
     );
-    expect(coursesDispatch).toHaveBeenCalledWith(
+    expect(programsDispatch).toHaveBeenCalledWith(
       clearSelectionAction(),
     );
     expect(logError).toBeCalledTimes(0);
@@ -282,7 +279,7 @@ describe.skip('BulkEnrollmentSubmit', () => {
 
   it('tests component creates toast after successful submit', async () => {
     const mockPromiseResolve = Promise.resolve({ data: {} });
-    LicenseManagerApiService.licenseBulkEnroll.mockReturnValue(mockPromiseResolve);
+    LmsApiService.bulkProgramEnrollment.mockReturnValue(mockPromiseResolve);
 
     render(
       <BulkEnrollmentSubmitWrapper
@@ -304,7 +301,7 @@ describe.skip('BulkEnrollmentSubmit', () => {
   it('tests component logs error response on unsuccessful api call', async () => {
     // eslint-disable-next-line prefer-promise-reject-errors
     const mockPromiseReject = Promise.reject('something went wrong');
-    LicenseManagerApiService.licenseBulkEnroll.mockReturnValue(mockPromiseReject);
+    LmsApiService.bulkProgramEnrollment.mockReturnValue(mockPromiseReject);
 
     render(
       <BulkEnrollmentSubmitWrapper
@@ -322,7 +319,7 @@ describe.skip('BulkEnrollmentSubmit', () => {
 
   it('renders alert modal on unsuccessful api call', async () => {
     const mockPromiseReject = Promise.reject(new Error('something went wrong'));
-    LicenseManagerApiService.licenseBulkEnroll.mockReturnValue(mockPromiseReject);
+    LmsApiService.bulkProgramEnrollment.mockReturnValue(mockPromiseReject);
 
     render(
       <BulkEnrollmentSubmitWrapper
@@ -343,7 +340,7 @@ describe.skip('BulkEnrollmentSubmit', () => {
   it('alert modal closes when user clicks OK', async () => {
     // eslint-disable-next-line prefer-promise-reject-errors
     const mockPromiseReject = Promise.reject('something went wrong');
-    LicenseManagerApiService.licenseBulkEnroll.mockReturnValue(mockPromiseReject);
+    LmsApiService.bulkProgramEnrollment.mockReturnValue(mockPromiseReject);
 
     render(
       <BulkEnrollmentSubmitWrapper
@@ -361,7 +358,7 @@ describe.skip('BulkEnrollmentSubmit', () => {
 
   it('component calls return to initial step on successful api call', async () => {
     const mockPromiseResolve = Promise.resolve({ data: {} });
-    LicenseManagerApiService.licenseBulkEnroll.mockReturnValue(mockPromiseResolve);
+    LmsApiService.bulkProgramEnrollment.mockReturnValue(mockPromiseResolve);
 
     render(
       <BulkEnrollmentSubmitWrapper

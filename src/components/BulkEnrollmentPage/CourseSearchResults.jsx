@@ -26,14 +26,14 @@ export const TABLE_HEADERS = {
 };
 
 const AddCoursesSelectionStatus = (props) => {
-  const { courses: [selectedCourses, dispatch] } = useContext(BulkEnrollContext);
+  const { programs: [selectedPrograms, dispatch] } = useContext(BulkEnrollContext);
 
-  return <BaseSelectionStatus selectedRows={selectedCourses} dispatch={dispatch} {...props} />;
+  return <BaseSelectionStatus selectedRows={selectedPrograms} dispatch={dispatch} {...props} />;
 };
 
-const SelectWithContext = (props) => <BaseSelectWithContext contextKey="courses" {...props} />;
+const SelectWithContext = (props) => <BaseSelectWithContext contextKey="programs" {...props} />;
 
-const SelectWithContextHeader = (props) => <BaseSelectWithContextHeader contextKey="courses" {...props} />;
+const SelectWithContextHeader = (props) => <BaseSelectWithContextHeader contextKey="programs" {...props} />;
 
 const selectColumn = {
   id: 'selection',
@@ -76,7 +76,7 @@ export const BaseCourseSearchResults = (props) => {
 
   const page = useMemo(
     () => {
-      if (refinements.page) {
+      if (refinements?.page) {
         return refinements.page;
       }
       return searchState && searchState.page;
@@ -84,7 +84,7 @@ export const BaseCourseSearchResults = (props) => {
     [searchState?.page, refinements],
   );
 
-  const { courses: [selectedCourses] } = useContext(BulkEnrollContext);
+  const { programs: [selectedPrograms] } = useContext(BulkEnrollContext);
 
   if (isSearchStalled) {
     return (
@@ -124,7 +124,7 @@ export const BaseCourseSearchResults = (props) => {
           SelectionStatusComponent={AddCoursesSelectionStatus}
           pageCount={searchResults?.nbPages || 1}
           pageSize={searchResults?.hitsPerPage || 0}
-          selectedFlatRows={selectedCourses}
+          selectedFlatRows={selectedPrograms}
           initialTableOptions={{
             getRowId: (row) => row.key,
           }}

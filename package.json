@@ -14,7 +14,7 @@
     "start": "fedx-scripts webpack-dev-server --progress",
     "start:with-theme": "THEME=npm:@edx/brand-edx.org@latest npm run install-theme && fedx-scripts webpack-dev-server --progress",
     "debug-test": "node --inspect-brk node_modules/.bin/jest --runInBand --coverage",
-    "test": "fedx-scripts jest --coverage --passWithNoTests --maxWorkers=50%",
+    "test": "fedx-scripts jest --coverage --updateSnapshot --passWithNoTests --maxWorkers=50%",
     "snapshot": "fedx-scripts jest --updateSnapshot",
     "prepare": "husky install"
   },

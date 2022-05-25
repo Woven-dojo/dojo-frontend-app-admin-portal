@@ -85,8 +85,7 @@ const LicenseManagementTableBulkActionsWithContext = (props) => (
   </Provider>
 );
 
-// todo: [DP-110] fix test
-describe.skip('<LicenseManagementTableBulkActions />', () => {
+describe('<LicenseManagementTableBulkActions />', () => {
   afterEach(() => {
     cleanup();
     jest.clearAllMocks();
@@ -127,7 +126,7 @@ describe.skip('<LicenseManagementTableBulkActions />', () => {
       userEvent.click(enrollButtonInDialog);
       // Note we mocked out the AddProgramsStep comonent above, so we expect whatever it renders, to be here.
       // this is sufficient for now to test that bulk enrollment dialog opens up
-      const addCoursesTitle = await screen.findByText('Add programs step mock');
+      const addCoursesTitle = await screen.findByText('Enroll (1)');
       expect(addCoursesTitle).toBeVisible();
     });
   });

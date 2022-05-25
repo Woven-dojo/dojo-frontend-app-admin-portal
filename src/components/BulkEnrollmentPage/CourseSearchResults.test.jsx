@@ -9,13 +9,13 @@ import thunk from 'redux-thunk';
 import { SearchContext, SearchPagination } from '@edx/frontend-enterprise-catalog-search';
 import Skeleton from 'react-loading-skeleton';
 import StatusAlert from '../StatusAlert';
-import BulkEnrollContextProvider from './BulkEnrollmentContext';
 import {
   BaseCourseSearchResults, NO_DATA_MESSAGE, TABLE_HEADERS,
 } from './CourseSearchResults';
 import { renderWithRouter } from '../test/testUtils';
 
 import '../../../__mocks__/react-instantsearch-dom';
+import BulkEnrollContextProvider from './BulkEnrollmentContext';
 
 const mockStore = configureMockStore([thunk]);
 
@@ -67,6 +67,7 @@ const searchState = {
 };
 
 const defaultProps = {
+  error: null,
   searchResults,
   searchState,
   isSearchStalled: false,
@@ -74,7 +75,9 @@ const defaultProps = {
   enterpriseSlug: 'fancyCompany',
 };
 
-const refinements = {};
+const refinements = {
+  page: 0,
+};
 
 // eslint-disable-next-line react/prop-types
 const CourseSearchWrapper = ({ value = { refinements }, props = defaultProps }) => (
@@ -89,8 +92,7 @@ const CourseSearchWrapper = ({ value = { refinements }, props = defaultProps }) 
   </Provider>
 );
 
-// todo: [DP-110] fix test
-describe.skip('<CourseSearchResults />', () => {
+describe('<CourseSearchResults />', () => {
   it('renders search results', () => {
     const wrapper = mount(<CourseSearchWrapper />);
 
@@ -109,7 +111,7 @@ describe.skip('<CourseSearchResults />', () => {
     expect(tableCells.at(3).text()).toBe('Sep 10, 2020 - Sep 10, 2030');
   });
   it('renders popover with course description', () => {
-    renderWithRouter(<CourseSearchWrapper {...defaultProps} />);
+    renderWithRouter(<CourseSearchWrapper />);
     expect(screen.queryByText(/short description of course 1/)).not.toBeInTheDocument();
     const courseTitle = screen.getByText(testCourseName);
     act(() => {
@@ -131,7 +133,7 @@ describe.skip('<CourseSearchResults />', () => {
     expect(wrapper.find(Skeleton)).toHaveLength(1);
   });
   it('shows selection options when at least one course is selected', () => {
-    renderWithRouter(<CourseSearchWrapper {...defaultProps} />);
+    renderWithRouter(<CourseSearchWrapper />);
     const rowToSelect = screen.getByText(testCourseName2).closest('tr');
     userEvent.click(within(rowToSelect).getByTestId('selectOne'));
     expect(screen.getByText('1 selected')).toBeInTheDocument();
@@ -139,6 +141,7 @@ describe.skip('<CourseSearchResults />', () => {
   it('shows all selected when courses on a page are selected', () => {
     const onePageState = { page: 0 };
     const allSelectedProps = {
+      error: null,
       searchResults,
       searchState: onePageState,
       isSearchStalled: false,

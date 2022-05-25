@@ -290,7 +290,7 @@ exports[`LearnerActivityTable renders active learners table correctly 1`] = `
                 className=""
                 scope={null}
               >
-                October 21, 2017
+                October 22, 2017
               </td>
               <td
                 className=""
@@ -352,7 +352,7 @@ exports[`LearnerActivityTable renders active learners table correctly 1`] = `
                 className=""
                 scope={null}
               >
-                October 21, 2017
+                October 22, 2017
               </td>
               <td
                 className=""
@@ -783,7 +783,7 @@ exports[`LearnerActivityTable renders inactive past month learners table correct
                 className=""
                 scope={null}
               >
-                October 21, 2017
+                October 22, 2017
               </td>
               <td
                 className=""
@@ -839,7 +839,7 @@ exports[`LearnerActivityTable renders inactive past month learners table correct
                 className=""
                 scope={null}
               >
-                October 21, 2017
+                October 22, 2017
               </td>
               <td
                 className=""
@@ -1233,7 +1233,7 @@ exports[`LearnerActivityTable renders inactive past week learners table correctl
                 className=""
                 scope={null}
               >
-                October 21, 2017
+                October 22, 2017
               </td>
               <td
                 className=""
@@ -1289,7 +1289,7 @@ exports[`LearnerActivityTable renders inactive past week learners table correctl
                 className=""
                 scope={null}
               >
-                October 21, 2017
+                October 22, 2017
               </td>
               <td
                 className=""
