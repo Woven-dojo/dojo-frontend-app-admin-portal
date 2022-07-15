@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { Button, Row, Col } from '@edx/paragon';
@@ -43,7 +42,7 @@ const SubscriptionDetails = ({ enterpriseSlug }) => {
       <Row className="mb-4">
         <Col className="mb-3 mb-lg-0">
           <Row className="m-0 justify-content-between">
-            <h2>{subscription.title}</h2>
+            <div />
             {shouldShowInviteLearnersButton && (
               <div className="text-md-right">
                 <InviteLearnersButton
@@ -52,39 +51,10 @@ const SubscriptionDetails = ({ enterpriseSlug }) => {
                     forceRefreshDetailView();
                     addToast(`${numAlreadyAssociated} email addresses were previously assigned. ${numSuccessfulAssignments} email addresses were successfully added.`);
                   }}
-                  disabled={subscription.isLockedForRenewalProcessing}
                 />
               </div>
             )}
           </Row>
-          <div className="mt-3 d-flex align-items-center">
-            {subscription.priorRenewals[0]?.priorSubscriptionPlanStartDate && (
-              <div className="mr-5">
-                <div className="text-uppercase text-muted">
-                  <small>Purchase Date</small>
-                </div>
-                <div className="lead">
-                  {moment(subscription.priorRenewals[0].priorSubscriptionPlanStartDate).format('MMMM D, YYYY')}
-                </div>
-              </div>
-            )}
-            <div className="mr-5">
-              <div className="text-uppercase text-muted">
-                <small>Start Date</small>
-              </div>
-              <div className="lead">
-                {moment(subscription.startDate).format('MMMM D, YYYY')}
-              </div>
-            </div>
-            <div>
-              <div className="text-uppercase text-muted">
-                <small>End Date</small>
-              </div>
-              <div className="lead">
-                {moment(subscription.expirationDate).format('MMMM D, YYYY')}
-              </div>
-            </div>
-          </div>
         </Col>
       </Row>
     </>

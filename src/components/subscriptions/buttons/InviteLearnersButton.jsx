@@ -8,7 +8,7 @@ import { SubscriptionDetailContext } from '../SubscriptionDetailContextProvider'
 export const INVITE_LEARNERS_BUTTON_TEXT = 'Invite learners';
 
 const InviteLearnersButton = ({ onSuccess, onClose, disabled }) => {
-  const { overview, subscription } = useContext(SubscriptionDetailContext);
+  const { overview, subscription, enterpriseId } = useContext(SubscriptionDetailContext);
   return (
     <ActionButtonWithModal
       buttonLabel={INVITE_LEARNERS_BUTTON_TEXT}
@@ -18,6 +18,7 @@ const InviteLearnersButton = ({ onSuccess, onClose, disabled }) => {
         <InviteLearnersModal
           availableSubscriptionCount={overview.unassigned}
           subscriptionUUID={subscription.uuid}
+          enterpriseUUID={enterpriseId}
           onSuccess={onSuccess}
           onClose={() => {
             closeModal();

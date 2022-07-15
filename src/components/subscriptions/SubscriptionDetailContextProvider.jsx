@@ -13,7 +13,9 @@ export const defaultStatusFilter = [ASSIGNED, ACTIVATED, REVOKED].join();
 
 const SubscriptionDetailContextProvider = ({ children, subscription }) => {
   // Initialize state needed for the subscription detail view and provide in SubscriptionDetailContext
-  const { data: subscriptions, errors, setErrors } = useContext(SubscriptionContext);
+  const {
+    data: subscriptions, enterpriseUUID: enterpriseId, errors, setErrors,
+  } = useContext(SubscriptionContext);
   const hasMultipleSubscriptions = subscriptions.count > 1;
   const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE);
   const [searchQuery, setSearchQuery] = useState(null);
@@ -41,6 +43,7 @@ const SubscriptionDetailContextProvider = ({ children, subscription }) => {
 
   const context = useMemo(() => ({
     currentPage,
+    enterpriseId,
     hasMultipleSubscriptions,
     forceRefreshOverview,
     overview,
@@ -55,6 +58,7 @@ const SubscriptionDetailContextProvider = ({ children, subscription }) => {
     forceRefreshDetailView,
   }), [
     currentPage,
+    enterpriseId,
     userStatusFilter,
     searchQuery,
     hasMultipleSubscriptions,

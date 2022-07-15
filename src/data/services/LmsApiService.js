@@ -32,6 +32,8 @@ class LmsApiService {
 
   static enterpriseCatalogUrl = `${LmsApiService.baseUrl}/api/catalogs/`;
 
+  static licenseAssignUrl = `${LmsApiService.baseUrl}/api/auth/activation-link/`;
+
   static fetchCourseOutline(courseId) {
     const options = {
       course_id: courseId,
@@ -330,6 +332,13 @@ class LmsApiService {
 
   static fetchCatalogDetail(enterpriseId) {
     return LmsApiService.apiClient().get(`${LmsApiService.enterpriseCatalogUrl}${enterpriseId}/`);
+  }
+
+  static licenseAssign(options) {
+    return LmsApiService.apiClient().post(
+      LmsApiService.licenseAssignUrl,
+      options,
+    );
   }
 }
 

@@ -23,7 +23,6 @@ import { formatTimestamp } from '../../../../utils';
 import SubscriptionZeroStateMessage from '../../SubscriptionZeroStateMessage';
 import DownloadCsvButton from '../../buttons/DownloadCsvButton';
 import LicenseManagementTableBulkActions from './LicenseManagementTableBulkActions';
-import LicenseManagementTableActionColumn from './LicenseManagementTableActionColumn';
 import LicenseManagementUserBadge from './LicenseManagementUserBadge';
 import { SUBSCRIPTION_TABLE_EVENTS } from '../../../../eventTracking';
 
@@ -44,12 +43,12 @@ const userRecentAction = (user) => {
   }
 };
 
-const selectColumn = {
-  id: 'selection',
-  Header: DataTable.ControlledSelectHeader,
-  Cell: DataTable.ControlledSelect,
-  disableSortBy: true,
-};
+// const selectColumn = {
+//   id: 'selection',
+//   Header: DataTable.ControlledSelectHeader,
+//   Cell: DataTable.ControlledSelect,
+//   disableSortBy: true,
+// };
 
 const LicenseManagementTable = () => {
   const { addToast } = useContext(ToastsContext);
@@ -205,8 +204,8 @@ const LicenseManagementTable = () => {
         isLoading={loadingUsers}
         isFilterable
         manualFilters
-        isSelectable={!isExpired}
-        manualSelectColumn={selectColumn}
+        // isSelectable={!isExpired}
+        // manualSelectColumn={selectColumn}
         SelectionStatusComponent={DataTable.ControlledSelectionStatus}
         defaultColumnValues={{ Filter: TextFilter }}
         isPaginated
@@ -265,23 +264,23 @@ const LicenseManagementTable = () => {
             disableFilters: true,
           },
         ]}
-        additionalColumns={[
-          {
-            id: 'action',
-            Header: '',
-            /* eslint-disable react/prop-types */
-            Cell: ({ row }) => (
-              <LicenseManagementTableActionColumn
-                user={row.original}
-                subscription={subscription}
-                disabled={isExpired}
-                onRemindSuccess={onRemindSuccess}
-                onRevokeSuccess={onRevokeSuccess}
-              />
-              /* eslint-enable */
-            ),
-          },
-        ]}
+        // additionalColumns={[
+        //   {
+        //     id: 'action',
+        //     Header: '',
+        //     /* eslint-disable react/prop-types */
+        //     Cell: ({ row }) => (
+        //       <LicenseManagementTableActionColumn
+        //         user={row.original}
+        //         subscription={subscription}
+        //         disabled={isExpired}
+        //         onRemindSuccess={onRemindSuccess}
+        //         onRevokeSuccess={onRevokeSuccess}
+        //       />
+        //       /* eslint-enable */
+        //     ),
+        //   },
+        // ]}
         // TODO: consider refactoring to use default DataTable behavior
         // instead of a custom implementation of these bulk actions
         bulkActions={(data) => {

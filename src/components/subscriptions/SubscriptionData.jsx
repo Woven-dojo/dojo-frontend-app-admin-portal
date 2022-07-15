@@ -18,6 +18,7 @@ export default function SubscriptionData({ children, enterpriseId }) {
 
   const context = useMemo(() => ({
     data: subscriptions,
+    enterpriseUUID: enterpriseId,
     errors,
     setErrors,
     forceRefresh,

@@ -60,7 +60,7 @@ class InviteLearnersModal extends React.Component {
   handleModalSubmit(formData) {
     const {
       addLicensesForUsers,
-      subscriptionUUID,
+      enterpriseUUID,
     } = this.props;
 
     const emailTemplateKey = 'email-template-body';
@@ -71,12 +71,13 @@ class InviteLearnersModal extends React.Component {
       template: formData[emailTemplateKey],
       greeting: formData['email-template-greeting'],
       closing: formData['email-template-closing'],
+      enterprise_uuid: enterpriseUUID,
     };
 
     options.user_emails = returnValidatedEmails(formData);
 
     /* eslint-disable no-underscore-dangle */
-    return addLicensesForUsers(options, subscriptionUUID)
+    return addLicensesForUsers(options)
       .then((response) => {
         const result = camelCaseObject(response.data);
         this.props.onSuccess(result);
@@ -225,7 +226,7 @@ InviteLearnersModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   addLicensesForUsers: PropTypes.func.isRequired,
-  subscriptionUUID: PropTypes.string.isRequired,
+  enterpriseUUID: PropTypes.string.isRequired,
 
   availableSubscriptionCount: PropTypes.number.isRequired,
   contactEmail: PropTypes.string,
