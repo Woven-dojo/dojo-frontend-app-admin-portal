@@ -27,12 +27,13 @@ const sendUserSubscriptionFailure = error => ({
 
 const addLicensesForUsers = ({
   options,
+  enterpriseUUID,
   onSuccess = () => {},
   onError = () => {},
 }) => (
   (dispatch) => {
     dispatch(sendSubscribeUsersRequest());
-    return LmsApiService.licenseAssign(options).then((response) => {
+    return LmsApiService.licenseAssign(options, enterpriseUUID).then((response) => {
       dispatch(sendUserSubscriptionSuccess(response));
       onSuccess(response);
     }).catch((error) => {
