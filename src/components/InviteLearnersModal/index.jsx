@@ -60,7 +60,7 @@ class InviteLearnersModal extends React.Component {
   handleModalSubmit(formData) {
     const {
       addLicensesForUsers,
-      subscriptionUUID,
+      enterpriseUUID,
     } = this.props;
 
     const emailTemplateKey = 'email-template-body';
@@ -71,12 +71,13 @@ class InviteLearnersModal extends React.Component {
       template: formData[emailTemplateKey],
       greeting: formData['email-template-greeting'],
       closing: formData['email-template-closing'],
+      enterprise_uuid: enterpriseUUID,
     };
 
     options.user_emails = returnValidatedEmails(formData);
 
     /* eslint-disable no-underscore-dangle */
-    return addLicensesForUsers(options, subscriptionUUID)
+    return addLicensesForUsers(options, enterpriseUUID)
       .then((response) => {
         const result = camelCaseObject(response.data);
         this.props.onSuccess(result);
@@ -91,14 +92,13 @@ class InviteLearnersModal extends React.Component {
 
   renderBody() {
     const {
-      submitFailed, availableSubscriptionCount,
+      submitFailed,
     } = this.props;
 
     return (
       <>
         {submitFailed && this.renderErrorMessage()}
         <form onSubmit={e => e.preventDefault()}>
-          <p>Unassigned licenses: {availableSubscriptionCount}</p>
           <div className="mt-4">
             <h3>Add Users</h3>
             <Field
@@ -119,25 +119,6 @@ class InviteLearnersModal extends React.Component {
               description="The file must be a CSV containing a single column of email addresses."
               accept=".csv"
               normalize={normalizeFileUpload}
-              data-hj-suppress
-            />
-            <h3>Email Template</h3>
-            <Field
-              name="email-template-greeting"
-              component={TextAreaAutoSize}
-              label="Customize Greeting"
-              data-hj-suppress
-            />
-            <Field
-              name="email-template-body"
-              component={TextAreaAutoSize}
-              label="Body"
-              disabled
-            />
-            <Field
-              name="email-template-closing"
-              component={TextAreaAutoSize}
-              label="Customize Closing"
               data-hj-suppress
             />
           </div>
@@ -225,9 +206,7 @@ InviteLearnersModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   addLicensesForUsers: PropTypes.func.isRequired,
-  subscriptionUUID: PropTypes.string.isRequired,
-
-  availableSubscriptionCount: PropTypes.number.isRequired,
+  enterpriseUUID: PropTypes.string.isRequired,
   contactEmail: PropTypes.string,
 };
 

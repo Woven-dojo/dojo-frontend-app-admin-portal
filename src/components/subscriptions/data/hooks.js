@@ -3,6 +3,7 @@ import { logError } from '@edx/frontend-platform/logging';
 
 import { camelCaseObject } from '@edx/frontend-platform/utils';
 import LicenseManagerApiService from '../../../data/services/LicenseManagerAPIService';
+import LmsApiService from '../../../data/services/LmsApiService';
 import {
   NETWORK_ERROR_MESSAGE,
   SUBSCRIPTION_USERS,
@@ -141,7 +142,7 @@ export const useSubscriptionUsersOverview = ({
 export const useSubscriptionUsers = ({
   currentPage,
   searchQuery,
-  subscriptionUUID,
+  enterpriseId,
   errors,
   setErrors,
   userStatusFilter,
@@ -150,7 +151,7 @@ export const useSubscriptionUsers = ({
   const [loadingUsers, setLoadingUsers] = useState(true);
 
   const loadSubscriptionUsers = () => {
-    if (!subscriptionUUID) {
+    if (!enterpriseId) {
       return;
     }
     const fetchUsers = async () => {
@@ -163,7 +164,7 @@ export const useSubscriptionUsers = ({
         options.search = searchQuery;
       }
       try {
-        const response = await LicenseManagerApiService.fetchSubscriptionUsers(subscriptionUUID, options);
+        const response = await LmsApiService.fetchEnterpriseUsers(enterpriseId, options);
         setSubscriptionUsers(camelCaseObject(response.data));
         setLoadingUsers(false);
       } catch (err) {
@@ -183,7 +184,7 @@ export const useSubscriptionUsers = ({
     loadSubscriptionUsers();
   };
 
-  useEffect(loadSubscriptionUsers, [currentPage, searchQuery, subscriptionUUID, userStatusFilter]);
+  useEffect(loadSubscriptionUsers, [currentPage, searchQuery, enterpriseId, userStatusFilter]);
 
   return [subscriptionUsers, forceRefresh, loadingUsers];
 };

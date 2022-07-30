@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 import InviteLearnersModal from '../../../containers/InviteLearnersModal';
 import ActionButtonWithModal from '../../ActionButtonWithModal';
-import { SubscriptionDetailContext } from '../SubscriptionDetailContextProvider';
+import { SubscriptionContext } from '../SubscriptionData';
 
 export const INVITE_LEARNERS_BUTTON_TEXT = 'Invite learners';
 
 const InviteLearnersButton = ({ onSuccess, onClose, disabled }) => {
-  const { overview, subscription } = useContext(SubscriptionDetailContext);
+  const { enterpriseId } = useContext(SubscriptionContext);
   return (
     <ActionButtonWithModal
       buttonLabel={INVITE_LEARNERS_BUTTON_TEXT}
@@ -16,8 +16,7 @@ const InviteLearnersButton = ({ onSuccess, onClose, disabled }) => {
       variant="primary"
       renderModal={({ closeModal }) => (
         <InviteLearnersModal
-          availableSubscriptionCount={overview.unassigned}
-          subscriptionUUID={subscription.uuid}
+          enterpriseUUID={enterpriseId}
           onSuccess={onSuccess}
           onClose={() => {
             closeModal();

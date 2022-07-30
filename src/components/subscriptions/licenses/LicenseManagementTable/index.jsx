@@ -4,39 +4,33 @@ import React, {
 import {
   DataTable,
   TextFilter,
-  CheckboxFilter,
   useWindowSize,
   breakpoints,
 } from '@edx/paragon';
 import debounce from 'lodash.debounce';
-import moment from 'moment';
 import { sendEnterpriseTrackEvent } from '@edx/frontend-enterprise-utils';
 
-import { SubscriptionContext } from '../../SubscriptionData';
 import { SubscriptionDetailContext, defaultStatusFilter } from '../../SubscriptionDetailContextProvider';
 import {
-  PAGE_SIZE, DEFAULT_PAGE, ACTIVATED, REVOKED, ASSIGNED,
+  PAGE_SIZE, DEFAULT_PAGE, ACTIVATED, ASSIGNED,
 } from '../../data/constants';
 import { DEBOUNCE_TIME_MILLIS } from '../../../../algoliaUtils';
 import { ToastsContext } from '../../../Toasts';
 import { formatTimestamp } from '../../../../utils';
-import SubscriptionZeroStateMessage from '../../SubscriptionZeroStateMessage';
-import DownloadCsvButton from '../../buttons/DownloadCsvButton';
 import LicenseManagementTableBulkActions from './LicenseManagementTableBulkActions';
-import LicenseManagementTableActionColumn from './LicenseManagementTableActionColumn';
 import LicenseManagementUserBadge from './LicenseManagementUserBadge';
 import { SUBSCRIPTION_TABLE_EVENTS } from '../../../../eventTracking';
 
+const getUserStatus = (user) => (user.isActivated ? ACTIVATED : ASSIGNED);
+
 const userRecentAction = (user) => {
-  switch (user.status) {
+  const userStatus = getUserStatus(user);
+  switch (userStatus) {
     case ACTIVATED: {
-      return `Activated: ${formatTimestamp({ timestamp: user.activationDate })}`;
-    }
-    case REVOKED: {
-      return `Revoked: ${formatTimestamp({ timestamp: user.revokedDate })}`;
+      return `Activated: ${formatTimestamp({ timestamp: user.modified })}`;
     }
     case ASSIGNED: {
-      return `Invited: ${formatTimestamp({ timestamp: user.lastRemindDate })}`;
+      return `Invited: ${formatTimestamp({ timestamp: user.created })}`;
     }
     default: {
       return null;
@@ -44,12 +38,12 @@ const userRecentAction = (user) => {
   }
 };
 
-const selectColumn = {
-  id: 'selection',
-  Header: DataTable.ControlledSelectHeader,
-  Cell: DataTable.ControlledSelect,
-  disableSortBy: true,
-};
+// const selectColumn = {
+//   id: 'selection',
+//   Header: DataTable.ControlledSelectHeader,
+//   Cell: DataTable.ControlledSelect,
+//   disableSortBy: true,
+// };
 
 const LicenseManagementTable = () => {
   const { addToast } = useContext(ToastsContext);
@@ -58,27 +52,20 @@ const LicenseManagementTable = () => {
   const showFiltersInSidebar = useMemo(() => width > breakpoints.medium.maxWidth, [width]);
 
   const {
-    forceRefresh: forceRefreshSubscription,
-  } = useContext(SubscriptionContext);
-
-  const {
     currentPage,
-    overview,
+    enterpriseId,
     forceRefreshDetailView,
     setSearchQuery,
     setCurrentPage,
-    subscription,
     users,
     forceRefreshUsers,
     loadingUsers,
     setUserStatusFilter,
   } = useContext(SubscriptionDetailContext);
 
-  const isExpired = moment().isAfter(subscription.expirationDate);
-
   const sendStatusFilterEvent = (statusFilter) => {
     sendEnterpriseTrackEvent(
-      subscription.enterpriseCustomerUuid,
+      enterpriseId,
       SUBSCRIPTION_TABLE_EVENTS.FILTER_STATUS,
       { applied_filters: statusFilter },
     );
@@ -86,7 +73,7 @@ const LicenseManagementTable = () => {
 
   const sendEmailFilterEvent = () => {
     sendEnterpriseTrackEvent(
-      subscription.enterpriseCustomerUuid,
+      enterpriseId,
       SUBSCRIPTION_TABLE_EVENTS.FILTER_EMAIL,
     );
   };
@@ -97,7 +84,7 @@ const LicenseManagementTable = () => {
       : SUBSCRIPTION_TABLE_EVENTS.PAGINATION_PREVIOUS;
 
     sendEnterpriseTrackEvent(
-      subscription.enterpriseCustomerUuid,
+      enterpriseId,
       eventName,
       { page: newPage },
     );
@@ -159,11 +146,10 @@ const LicenseManagementTable = () => {
   // Maps user to rows
   const rows = useMemo(
     () => users?.results?.map(user => ({
-      id: user.uuid,
-      email: user.userEmail,
-      emailLabel: <span data-hj-suppress>{user.userEmail}</span>,
-      status: user.status,
-      statusBadge: <LicenseManagementUserBadge userStatus={user.status} />,
+      email: user.email,
+      emailLabel: <span data-hj-suppress>{user.email}</span>,
+      status: getUserStatus(user),
+      statusBadge: <LicenseManagementUserBadge userStatus={getUserStatus(user)} />,
       recentAction: userRecentAction(user),
     })),
     [users],
@@ -183,44 +169,36 @@ const LicenseManagementTable = () => {
   const onRevokeSuccess = (clearTableSelectionCallback) => (() => {
     // Refresh subscription and user data to get updated revoke count and revoked list of users
     clearTableSelectionCallback();
-    forceRefreshSubscription();
     forceRefreshDetailView();
     addToast('Licenses successfully revoked');
   });
 
-  const showSubscriptionZeroStateMessage = subscription.licenses.total === subscription.licenses.unassigned;
-
-  const tableActions = useMemo(() => {
-    if (showSubscriptionZeroStateMessage) {
-      return [];
-    }
-    return [<DownloadCsvButton />];
-  }, [showSubscriptionZeroStateMessage]);
+  // const tableActions = useMemo(() => {
+  //   return [<DownloadCsvButton />];
+  // }, []);
 
   return (
     <>
-      {showSubscriptionZeroStateMessage && <SubscriptionZeroStateMessage /> }
       <DataTable
         showFiltersInSidebar={showFiltersInSidebar}
         isLoading={loadingUsers}
         isFilterable
         manualFilters
-        isSelectable={!isExpired}
-        manualSelectColumn={selectColumn}
+        // manualSelectColumn={selectColumn}
         SelectionStatusComponent={DataTable.ControlledSelectionStatus}
         defaultColumnValues={{ Filter: TextFilter }}
         isPaginated
         manualPagination
         itemCount={users.count}
         pageCount={users.numPages || 1}
-        tableActions={tableActions}
+        // tableActions={tableActions}
         initialState={{
           pageSize: PAGE_SIZE,
           pageIndex: DEFAULT_PAGE - 1,
         }}
-        initialTableOptions={{
-          getRowId: row => row.id,
-        }}
+        // initialTableOptions={{
+        //   getRowId: row => row.id,
+        // }}
         EmptyTableComponent={
           () => {
             if (loadingUsers) {
@@ -241,23 +219,19 @@ const LicenseManagementTable = () => {
           {
             Header: 'Status',
             accessor: 'statusBadge',
-            Filter: CheckboxFilter,
-            filter: 'includesValue',
-            filterChoices: [{
-              name: 'Active',
-              number: overview.activated,
-              value: ACTIVATED,
-            },
-            {
-              name: 'Pending',
-              number: overview.assigned,
-              value: ASSIGNED,
-            },
-            {
-              name: 'Revoked',
-              number: overview.revoked,
-              value: REVOKED,
-            }],
+            disableFilters: true,
+            // Filter: CheckboxFilter,
+            // filter: 'includesValue',
+            // filterChoices: [{
+            //   name: 'Active',
+            //   // number: overview.activated,
+            //   value: ACTIVATED,
+            // },
+            // {
+            //   name: 'Pending',
+            //   // number: overview.assigned,
+            //   value: ASSIGNED,
+            // }],
           },
           {
             Header: 'Recent action',
@@ -265,23 +239,23 @@ const LicenseManagementTable = () => {
             disableFilters: true,
           },
         ]}
-        additionalColumns={[
-          {
-            id: 'action',
-            Header: '',
-            /* eslint-disable react/prop-types */
-            Cell: ({ row }) => (
-              <LicenseManagementTableActionColumn
-                user={row.original}
-                subscription={subscription}
-                disabled={isExpired}
-                onRemindSuccess={onRemindSuccess}
-                onRevokeSuccess={onRevokeSuccess}
-              />
-              /* eslint-enable */
-            ),
-          },
-        ]}
+        // additionalColumns={[
+        //   {
+        //     id: 'action',
+        //     Header: '',
+        //     /* eslint-disable react/prop-types */
+        //     Cell: ({ row }) => (
+        //       <LicenseManagementTableActionColumn
+        //         user={row.original}
+        //         subscription={subscription}
+        //         disabled={isExpired}
+        //         onRemindSuccess={onRemindSuccess}
+        //         onRevokeSuccess={onRevokeSuccess}
+        //       />
+        //       /* eslint-enable */
+        //     ),
+        //   },
+        // ]}
         // TODO: consider refactoring to use default DataTable behavior
         // instead of a custom implementation of these bulk actions
         bulkActions={(data) => {
@@ -295,17 +269,12 @@ const LicenseManagementTable = () => {
 
           return (
             <LicenseManagementTableBulkActions
-              subscription={subscription}
               selectedUsers={selectedUsers}
               onRemindSuccess={onRemindSuccess(clearSelection)}
               onRevokeSuccess={onRevokeSuccess(clearSelection)}
               onEnrollSuccess={onEnrollSuccess(clearSelection)}
-              activatedUsersCount={overview.activated}
-              assignedUsersCount={overview.assigned}
-              revokedUsersCount={overview.revoked}
               allUsersSelected={data.isEntireTableSelected}
               activeFilters={getActiveFilters(data.tableInstance.columns)}
-              disabled={isExpired}
               tableItemCount={tableItemCount}
             />
           );

@@ -1,5 +1,6 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { configuration } from '../../config';
+import { PAGE_SIZE } from '../../components/subscriptions/data/constants';
 
 class LmsApiService {
   static apiClient = getAuthenticatedHttpClient;
@@ -31,6 +32,8 @@ class LmsApiService {
   static enterpriseProgramBulkEnrollmentUrl = `${LmsApiService.baseUrl}/api/program-enrollment/bulk-enrollment/`;
 
   static enterpriseCatalogUrl = `${LmsApiService.baseUrl}/api/catalogs/`;
+
+  static licenseBaseUrl = `${LmsApiService.baseUrl}/api/auth/enterprise-activation-links/`;
 
   static fetchCourseOutline(courseId) {
     const options = {
@@ -330,6 +333,23 @@ class LmsApiService {
 
   static fetchCatalogDetail(enterpriseId) {
     return LmsApiService.apiClient().get(`${LmsApiService.enterpriseCatalogUrl}${enterpriseId}/`);
+  }
+
+  static licenseAssign(options, enterpriseUUID) {
+    return LmsApiService.apiClient().post(
+      `${LmsApiService.licenseBaseUrl}${enterpriseUUID}/`,
+      options,
+    );
+  }
+
+  static fetchEnterpriseUsers(enterpriseUUID, options) {
+    const queryParams = new URLSearchParams({
+      page_size: PAGE_SIZE,
+      ...options,
+    });
+
+    const url = `${LmsApiService.licenseBaseUrl}${enterpriseUUID}/?${queryParams.toString()}`;
+    return LmsApiService.apiClient().get(url);
   }
 }
 

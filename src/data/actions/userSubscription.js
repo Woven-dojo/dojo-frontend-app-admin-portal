@@ -5,7 +5,7 @@ import {
   USER_SUBSCRIPTION_FAILURE,
 } from '../constants/userSubscription';
 
-import LicenseManagerApiService from '../services/LicenseManagerAPIService';
+import LmsApiService from '../services/LmsApiService';
 
 const sendSubscribeUsersRequest = () => ({
   type: USER_SUBSCRIPTION_REQUEST,
@@ -27,13 +27,13 @@ const sendUserSubscriptionFailure = error => ({
 
 const addLicensesForUsers = ({
   options,
-  subscriptionUUID,
+  enterpriseUUID,
   onSuccess = () => {},
   onError = () => {},
 }) => (
   (dispatch) => {
     dispatch(sendSubscribeUsersRequest());
-    return LicenseManagerApiService.licenseAssign(options, subscriptionUUID).then((response) => {
+    return LmsApiService.licenseAssign(options, enterpriseUUID).then((response) => {
       dispatch(sendUserSubscriptionSuccess(response));
       onSuccess(response);
     }).catch((error) => {
