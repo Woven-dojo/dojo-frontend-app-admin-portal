@@ -19,9 +19,9 @@ const SubscriptionDetails = () => {
             <div />
             <div className="text-md-right">
               <InviteLearnersButton
-                onSuccess={({ numAlreadyAssociated, numSuccessfulAssignments }) => {
+                onSuccess={({ numSuccessfulAssignments }) => {
                   forceRefreshDetailView();
-                  addToast(`${numAlreadyAssociated} email addresses were previously assigned. ${numSuccessfulAssignments} email addresses were successfully added.`);
+                  addToast(`${numSuccessfulAssignments} email addresses were successfully added.`);
                 }}
               />
             </div>
