@@ -1,6 +1,7 @@
 import React, {
   useCallback, useMemo, useContext,
 } from 'react';
+import ReactDOM from 'react-dom';
 import {
   DataTable,
   TextFilter,
@@ -55,6 +56,7 @@ const LicenseManagementTable = () => {
     currentPage,
     enterpriseId,
     forceRefreshDetailView,
+    searchQuery,
     setSearchQuery,
     setCurrentPage,
     users,
@@ -106,7 +108,14 @@ const LicenseManagementTable = () => {
           }
           case 'emailLabel': {
             sendEmailFilterEvent();
-            setSearchQuery(filter.value);
+            Promise.resolve().then(() => {
+              ReactDOM.unstable_batchedUpdates(() => {
+                if (searchQuery !== filter.value) {
+                  setCurrentPage(DEFAULT_PAGE);
+                }
+                setSearchQuery(filter.value);
+              });
+            });
             break;
           }
           default: break;
@@ -127,12 +136,16 @@ const LicenseManagementTable = () => {
   // Call back function, handles filters and page changes
   const fetchData = useCallback(
     (args) => {
-      // pages index from 1 in backend, DataTable component index from 0
-      if (args.pageIndex !== currentPage - 1) {
-        debouncedSetCurrentPage(args.pageIndex + 1);
-        sendPaginationEvent(currentPage - 1, args.pageIndex);
-      }
-      debouncedUpdateFilters(args.filters);
+      Promise.resolve().then(() => {
+        ReactDOM.unstable_batchedUpdates(() => {
+          debouncedUpdateFilters(args.filters);
+          // pages index from 1 in backend, DataTable component index from 0
+          if (args.pageIndex !== currentPage - 1) {
+            debouncedSetCurrentPage(args.pageIndex + 1);
+            sendPaginationEvent(currentPage - 1, args.pageIndex);
+          }
+        });
+      });
     },
     [currentPage],
   );
