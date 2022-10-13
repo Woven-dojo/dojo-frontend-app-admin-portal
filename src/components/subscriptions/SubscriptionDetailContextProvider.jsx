@@ -16,17 +16,18 @@ const SubscriptionDetailContextProvider = ({ children }) => {
   const {
     enterpriseId, errors, setErrors,
   } = useContext(SubscriptionContext);
-  const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE);
-  const [searchQuery, setSearchQuery] = useState(null);
-  const [userStatusFilter, setUserStatusFilter] = useState(defaultStatusFilter);
+
+  const [tableParams, setTableParams] = useState({
+    currentPage: DEFAULT_PAGE,
+    searchQuery: null,
+    userStatusFilter: defaultStatusFilter,
+  });
 
   const [users, forceRefreshUsers, loadingUsers] = useSubscriptionUsers({
-    currentPage,
-    searchQuery,
+    ...tableParams,
     enterpriseId,
     errors,
     setErrors,
-    userStatusFilter,
   });
 
   const forceRefreshDetailView = () => {
@@ -34,21 +35,16 @@ const SubscriptionDetailContextProvider = ({ children }) => {
   };
 
   const context = useMemo(() => ({
-    currentPage,
+    ...tableParams,
+    setTableParams,
     enterpriseId,
-    searchQuery,
-    setCurrentPage,
-    setSearchQuery,
     users,
     forceRefreshUsers,
     loadingUsers,
-    setUserStatusFilter,
     forceRefreshDetailView,
   }), [
-    currentPage,
+    tableParams,
     enterpriseId,
-    userStatusFilter,
-    searchQuery,
     users,
     loadingUsers,
   ]);

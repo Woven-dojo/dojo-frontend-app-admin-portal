@@ -53,14 +53,14 @@ const LicenseManagementTable = () => {
 
   const {
     currentPage,
+    searchQuery,
+    userStatusFilter,
+    setTableParams,
     enterpriseId,
     forceRefreshDetailView,
-    setSearchQuery,
-    setCurrentPage,
     users,
     forceRefreshUsers,
     loadingUsers,
-    setUserStatusFilter,
   } = useContext(SubscriptionDetailContext);
 
   const sendStatusFilterEvent = (statusFilter) => {
@@ -91,22 +91,34 @@ const LicenseManagementTable = () => {
   };
 
   // Filtering and pagination
-  const updateFilters = (filters) => {
+  const updateFilters = (filters, pageIndex) => {
+    const newCurrentPage = (pageIndex !== currentPage - 1) ? (pageIndex + 1) : currentPage;
     if (filters.length < 1) {
-      setSearchQuery(null);
-      setUserStatusFilter(defaultStatusFilter);
+      setTableParams({
+        currentPage: newCurrentPage,
+        searchQuery: null,
+        userStatusFilter: defaultStatusFilter,
+      });
     } else {
       filters.forEach((filter) => {
         switch (filter.id) {
           case 'statusBadge': {
             const newStatusFilter = filter.value.join();
             sendStatusFilterEvent(newStatusFilter);
-            setUserStatusFilter(newStatusFilter);
+            setTableParams({
+              currentPage: newCurrentPage,
+              searchQuery,
+              userStatusFilter: newStatusFilter,
+            });
             break;
           }
           case 'emailLabel': {
             sendEmailFilterEvent();
-            setSearchQuery(filter.value);
+            setTableParams({
+              currentPage: newCurrentPage,
+              searchQuery: filter.value,
+              userStatusFilter,
+            });
             break;
           }
           default: break;
@@ -120,19 +132,13 @@ const LicenseManagementTable = () => {
     DEBOUNCE_TIME_MILLIS,
   );
 
-  const debouncedSetCurrentPage = debounce(
-    setCurrentPage,
-    DEBOUNCE_TIME_MILLIS,
-  );
   // Call back function, handles filters and page changes
   const fetchData = useCallback(
     (args) => {
-      // pages index from 1 in backend, DataTable component index from 0
+      debouncedUpdateFilters(args.filters, args.pageIndex);
       if (args.pageIndex !== currentPage - 1) {
-        debouncedSetCurrentPage(args.pageIndex + 1);
         sendPaginationEvent(currentPage - 1, args.pageIndex);
       }
-      debouncedUpdateFilters(args.filters);
     },
     [currentPage],
   );
