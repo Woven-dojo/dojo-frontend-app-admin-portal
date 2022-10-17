@@ -351,6 +351,11 @@ class LmsApiService {
     const url = `${LmsApiService.licenseBaseUrl}${enterpriseUUID}/?${queryParams.toString()}`;
     return LmsApiService.apiClient().get(url);
   }
+
+  static disableActivationLink(enterpriseUUID, activationLinkUUID) {
+    const url = `${LmsApiService.licenseBaseUrl}${enterpriseUUID}/${activationLinkUUID}/`;
+    return LmsApiService.apiClient().delete(url);
+  }
 }
 
 export default LmsApiService;

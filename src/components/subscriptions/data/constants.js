@@ -18,6 +18,9 @@ export const SUBSCRIPTION_USERS_OVERVIEW = 'Subscription Users Overview';
 export const NETWORK_ERROR_MESSAGE = 'Error occurred while loading the data.';
 export const DEFAULT_PAGE = 1;
 
+// Disable activation link error field name
+export const DISABLE_ACTIVATION = 'Disable Activation Link';
+
 // used to determine whether to show the revocation cap messaging in the license revoke modal
 export const SHOW_REVOCATION_CAP_PERCENT = 80;
 
