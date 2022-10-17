@@ -57,8 +57,8 @@ const DeleteActivationButton = ({ activationLinkId }) => {
         )}
       >
         <p>
-          If you disable activation link, the user will not be able to activate the account by
-          clicking the activation link in the received email. This action cannot be undone.
+          If you disable this activation link, the user will no longer be able activate
+          their account via the activation link they were emailed. This action cannot be undone.
         </p>
       </AlertModal>
     </>
