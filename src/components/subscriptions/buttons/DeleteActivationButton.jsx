@@ -29,7 +29,7 @@ const DeleteActivationButton = ({ activationLinkId }) => {
     await LmsApiService.disableActivationLink(enterpriseId, activationLinkId)
       .then(() => {
         forceRefreshDetailView();
-        addToast('Activation link is disabled successfully.');
+        addToast('Activation link was disabled successfully.');
       })
       .catch((err) => {
         logError(err);
@@ -45,7 +45,7 @@ const DeleteActivationButton = ({ activationLinkId }) => {
       <Icon role="button" src={Delete} onClick={open} />
 
       <AlertModal
-        title="Are you sure want to disable!"
+        title="Are you sure you want to disable this link?"
         hasCloseButton
         isOpen={isOpen}
         onClose={close}
@@ -58,8 +58,7 @@ const DeleteActivationButton = ({ activationLinkId }) => {
       >
         <p>
           If you disable activation link, the user will not be able to activate the account by
-          clicking the activation link in the received email. This action cannot be undone. If you want
-          to continue with the disabling, please click the Disable button.
+          clicking the activation link in the received email. This action cannot be undone.
         </p>
       </AlertModal>
     </>
