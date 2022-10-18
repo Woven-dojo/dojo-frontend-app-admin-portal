@@ -20,6 +20,7 @@ import { formatTimestamp } from '../../../../utils';
 import LicenseManagementTableBulkActions from './LicenseManagementTableBulkActions';
 import LicenseManagementUserBadge from './LicenseManagementUserBadge';
 import { SUBSCRIPTION_TABLE_EVENTS } from '../../../../eventTracking';
+import DeleteActivationButton from '../../buttons/DeleteActivationButton';
 
 const getUserStatus = (user) => (user.isActivated ? ACTIVATED : ASSIGNED);
 
@@ -157,6 +158,7 @@ const LicenseManagementTable = () => {
       status: getUserStatus(user),
       statusBadge: <LicenseManagementUserBadge userStatus={getUserStatus(user)} />,
       recentAction: userRecentAction(user),
+      activationLinkId: user.id,
     })),
     [users],
   );
@@ -243,6 +245,20 @@ const LicenseManagementTable = () => {
             Header: 'Recent action',
             accessor: 'recentAction',
             disableFilters: true,
+          },
+        ]}
+        additionalColumns={[
+          {
+            id: 'action',
+            Header: 'Action',
+            visible: false,
+            // eslint-disable-next-line react/prop-types
+            Cell: ({ row: { original: { status, activationLinkId } } }) => {
+              if (status !== ASSIGNED) {
+                return null;
+              }
+              return <DeleteActivationButton activationLinkId={activationLinkId} />;
+            },
           },
         ]}
         // additionalColumns={[
