@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {
   Dropdown, Navbar, AvatarButton, Nav,
 } from '@edx/paragon';
-import { getProxyLoginUrl } from '@edx/frontend-enterprise-logistration';
 
 import {
-  getAuthenticatedUser, getLogoutRedirectUrl,
+  getAuthenticatedUser,
 } from '@edx/frontend-platform/auth';
+import { getConfig } from '@edx/frontend-platform/config';
 import SidebarToggle from '../../containers/SidebarToggle';
 import Img from '../Img';
 
@@ -37,10 +37,14 @@ Logo.propTypes = {
   enterpriseName: PropTypes.string,
 };
 
-export const HeaderDropdown = ({ user, enterpriseSlug }) => {
+export const HeaderDropdown = ({ user }) => {
+  const { LMS_BASE_URL, LOGOUT_URL } = getConfig();
   const { profileImage, username } = user;
   const avatarImage = profileImage?.hasImage ? profileImage.imageUrlMedium : null;
   const avatarScreenReaderText = `Profile image for ${username}`;
+
+  const nextUrl = `${LMS_BASE_URL}/iam/login?next=${window.location.href}`;
+  const logoutUrl = `${LOGOUT_URL}?next=${nextUrl}`;
 
   return (
     <Dropdown>
@@ -55,7 +59,7 @@ export const HeaderDropdown = ({ user, enterpriseSlug }) => {
       </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item
-          href={getLogoutRedirectUrl(getProxyLoginUrl(enterpriseSlug))}
+          href={logoutUrl}
         >
           Logout
         </Dropdown.Item>
@@ -65,7 +69,6 @@ export const HeaderDropdown = ({ user, enterpriseSlug }) => {
 };
 
 HeaderDropdown.defaultProps = {
-  enterpriseSlug: null,
 };
 
 HeaderDropdown.propTypes = {
@@ -76,7 +79,6 @@ HeaderDropdown.propTypes = {
     }),
     username: PropTypes.string.isRequired,
   }).isRequired,
-  enterpriseSlug: PropTypes.string,
 };
 
 const Header = ({
@@ -97,7 +99,7 @@ const Header = ({
         </Nav>
         {(user?.username && enterpriseSlug) && (
           <Nav aria-label="Secondary" className="align-items-center ml-auto">
-            <HeaderDropdown user={user} enterpriseSlug={enterpriseSlug} />
+            <HeaderDropdown user={user} />
           </Nav>
         )}
       </Navbar>
