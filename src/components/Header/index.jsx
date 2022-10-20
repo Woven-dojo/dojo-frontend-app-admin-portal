@@ -43,8 +43,8 @@ export const HeaderDropdown = ({ user }) => {
   const avatarImage = profileImage?.hasImage ? profileImage.imageUrlMedium : null;
   const avatarScreenReaderText = `Profile image for ${username}`;
 
-  const nextUrl = `${LMS_BASE_URL}/iam/login?next=${window.location.href}`;
-  const logoutUrl = `${LOGOUT_URL}?next=${nextUrl}`;
+  const nextUrl = `${LMS_BASE_URL}/iam/login?next=${encodeURIComponent(window.location.href)}`;
+  const logoutUrl = `${LOGOUT_URL}?next=${encodeURIComponent(nextUrl)}`;
 
   return (
     <Dropdown>
